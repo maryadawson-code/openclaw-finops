@@ -9,22 +9,51 @@ import {
 
 const DEFAULT_FREE_LIMIT = 25;
 
+/**
+ * Tier hierarchy (ascending access):
+ *   FREE  → FinOps, API-Bridge (limited)
+ *   PRO   → FinOps, API-Bridge (expanded)          $29/mo
+ *   TEAM  → + Guardrail, Fortress Core (Tools 1-7)  $99/mo
+ *   ENTERPRISE → + Fortress Advanced (Tools 8-12)   $499/mo
+ */
+export const TIER_RANK: Record<string, number> = {
+  FREE: 0,
+  PRO: 1,
+  TEAM: 2,
+  ENTERPRISE: 3,
+};
+
 function buildExhaustedMessage(user: UserRecord): string {
   const limit = user.monthly_limit ?? DEFAULT_FREE_LIMIT;
+  const tier = user.tier;
 
-  if (user.tier === "PRO") {
+  if (tier === "ENTERPRISE") {
     return (
-      `OpenClaw FinOps: Professional usage limit reached (${limit}/${limit}). ` +
-      `To unlock unlimited high-performance forecasting and GPU pricing data, ` +
-      `purchase an Enterprise Token here: https://billing.openclaw.com/enterprise. ` +
-      `I will wait for your confirmation to resume.`
+      `OpenClaw: Enterprise usage limit reached (${limit}/${limit}). ` +
+      `Contact support@openclaw.com to increase your allocation.`
     );
   }
 
-  // FREE tier
+  if (tier === "TEAM") {
+    return (
+      `OpenClaw: Team usage limit reached (${limit}/${limit}). ` +
+      `Upgrade to Enterprise ($499/mo) to unlock 50,000 ops/month, visual contracts, ` +
+      `automated rollbacks, and route parity verification: https://billing.openclaw.com/enterprise`
+    );
+  }
+
+  if (tier === "PRO") {
+    return (
+      `OpenClaw: Pro usage limit reached (${limit}/${limit}). ` +
+      `Upgrade to Team ($99/mo) for 2,000 ops/month plus Guardrail and Fortress Core: ` +
+      `https://billing.openclaw.com/team`
+    );
+  }
+
+  // FREE
   return (
     `OpenClaw FinOps Alert: Your free monthly tier (${limit}/${limit} operations) has been exhausted. ` +
-    `To generate this architectural cost forecast, please upgrade to the Pro tier here: https://billing.openclaw.com/pro. ` +
+    `Upgrade to Pro ($29/mo) for 500 ops/month: https://billing.openclaw.com/pro. ` +
     `Once upgraded, ask me to retry.\n\n` +
     `Need more free calls? Share your referral code "${user.referral_code}" — ` +
     `when a new user includes it in their x-referral-code header, you both get +5 operations.`
@@ -85,11 +114,9 @@ export async function authenticateAndCheckLimits(
     }
   }
 
-  // --- Rate limit check (tiered) ---
-  // ENTERPRISE users are effectively unlimited (50,000 ops/month)
-  // PRO and FREE users are gated at their monthly_limit
+  // --- Rate limit check ---
   const limit = user.monthly_limit ?? DEFAULT_FREE_LIMIT;
-  if (user.tier !== "ENTERPRISE" && user.monthly_usage_count >= limit) {
+  if (user.monthly_usage_count >= limit) {
     return {
       ok: false,
       reason: "rate_limited",

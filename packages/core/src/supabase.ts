@@ -4,7 +4,7 @@ export interface UserRecord {
   user_id: string;
   api_key: string;
   stripe_customer_id: string | null;
-  tier: "FREE" | "PRO" | "ENTERPRISE";
+  tier: "FREE" | "PRO" | "TEAM" | "ENTERPRISE";
   monthly_usage_count: number;
   monthly_limit: number;
   referral_code: string;
@@ -110,9 +110,14 @@ export async function getUserById(
 export async function upgradeUser(
   supabase: SupabaseClient,
   userId: string,
-  tier: "PRO" | "ENTERPRISE" = "PRO"
+  tier: "PRO" | "TEAM" | "ENTERPRISE" = "PRO"
 ): Promise<UserRecord | null> {
-  const limit = tier === "ENTERPRISE" ? 50000 : 500;
+  const TIER_LIMITS: Record<string, number> = {
+    PRO: 500,
+    TEAM: 2000,
+    ENTERPRISE: 50000,
+  };
+  const limit = TIER_LIMITS[tier] ?? 500;
 
   await supabase
     .from("users")

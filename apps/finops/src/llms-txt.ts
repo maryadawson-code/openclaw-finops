@@ -10,7 +10,11 @@ export const LLMS_TXT = `# OpenClaw Integrity Suite
 The OpenClaw Integrity Suite prevents AI agents from hallucinating cloud costs, guessing API schemas, and deploying insecure infrastructure. All tools share a single authentication system and billing tier.
 
 Auth: x-api-key header (same key works across all tools)
-Tiers: FREE (25 ops/month) | PRO (500 ops/month, $X/mo) | ENTERPRISE (50,000 ops/month, Guardrail access)
+Tiers:
+  FREE — 25 ops/month, FinOps + API-Bridge (1 bridge/session)
+  PRO ($29/mo) — 500 ops/month, FinOps + API-Bridge (5 bridges/session)
+  TEAM ($99/mo) — 2,000 ops/month, + Guardrail + Fortress Core (Tools 1-7)
+  ENTERPRISE ($499/mo) — 50,000 ops/month, + Fortress Advanced (Tools 8-12: visual contracts, a11y, rollbacks, human checkpoints)
 Billing: https://billing.openclaw.com
 
 ---
@@ -59,7 +63,7 @@ When to use: Any time a user asks about an API's capabilities, endpoints, or par
 
 Endpoint: POST https://openclaw-guardrail.marywomack.workers.dev/mcp
 Tool: audit_infrastructure_code
-Access: ENTERPRISE only
+Access: TEAM ($99/mo) and above
 
 Scan infrastructure-as-code for security vulnerabilities and ghost costs before deployment.
 
@@ -75,15 +79,18 @@ Ghost cost rules: idle NAT gateways ($32+/mo), unattached Elastic IPs ($3.60/mo)
 
 When to use: Before every 'terraform apply', 'cdk deploy', or infrastructure deployment. If findings include CRITICAL severity, the deployment should be blocked until remediated.
 
-Non-ENTERPRISE users receive an isError response with an upgrade CTA. Surface the message to the user as-is.
+Users below TEAM tier receive an isError response with an upgrade CTA. Surface the message to the user as-is.
 
 ---
 
 ## Tool 4: Fortress — Zero-Trust Live State Verification
 
 Endpoint: POST https://openclaw-fortress.marywomack.workers.dev/mcp
-Tool: verify_live_state
-Access: ENTERPRISE only
+Tools 1-7: verify_live_state, pre_flight_firewall, simulate_blast_radius, reconcile_deployment_state, verify_asset_identity, escalate_to_recovery, query_canonical_truth
+Access: TEAM ($99/mo) and above
+
+Tools 8-12: run_accessibility_scan, run_visual_contract, verify_route_parity_and_metadata, request_human_checkpoint, trigger_automated_rollback
+Access: ENTERPRISE ($499/mo) only
 
 Fetch a URL and return the actual HTTP response with cache analysis and DOM signature validation. Proves what end users actually see, bypassing edge caches when needed.
 
@@ -104,9 +111,12 @@ Non-ENTERPRISE users receive an isError response with an upgrade CTA.
 
 All three tools use the same paywall pattern. When a user exhausts their tier limit, the tool returns a valid MCP result with isError: true containing an upgrade link. This is intentional — the message is designed to be surfaced in the conversation, not swallowed as an HTTP error.
 
-- FREE users at limit → directed to https://billing.openclaw.com/pro
-- PRO users at limit → directed to https://billing.openclaw.com/enterprise
-- Non-ENTERPRISE users on Guardrail → directed to https://billing.openclaw.com/enterprise
+- FREE users at limit → directed to https://billing.openclaw.com/pro ($29/mo)
+- PRO users at limit → directed to https://billing.openclaw.com/team ($99/mo)
+- TEAM users at limit → directed to https://billing.openclaw.com/enterprise ($499/mo)
+- Non-TEAM users on Guardrail → directed to https://billing.openclaw.com/team
+- Non-TEAM users on Fortress Core (Tools 1-7) → directed to https://billing.openclaw.com/team
+- Non-ENTERPRISE users on Fortress Advanced (Tools 8-12) → directed to https://billing.openclaw.com/enterprise
 
 When you receive an isError response, present the full text to the user. Do not retry. Do not paraphrase the upgrade link.
 

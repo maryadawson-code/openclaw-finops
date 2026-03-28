@@ -4,6 +4,7 @@ export {
   authenticateAndCheckLimits,
   extractApiKey,
   extractReferralCode,
+  TIER_RANK,
   type AuthResult,
 } from "./auth.js";
 

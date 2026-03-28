@@ -6,13 +6,18 @@ import {
   extractApiKey,
   extractReferralCode,
   handleStripeWebhook,
+  TIER_RANK,
 } from "@openclaw/core";
 import { createFortressServer } from "./mcp-server.js";
 
-const ENTERPRISE_GATE_MESSAGE =
-  "OpenClaw Fortress is an Enterprise-only zero-trust QA layer. " +
-  "To prevent AI deployment drift, cache-masking, and prompt-leakage, " +
-  "upgrade here: https://billing.openclaw.com/enterprise";
+const TEAM_GATE_MESSAGE =
+  "OpenClaw Fortress Core requires a TEAM subscription ($99/mo). " +
+  "Upgrade to prevent AI deployment drift: https://billing.openclaw.com/team";
+
+// The Fortress no longer has a single Enterprise gate at the /mcp level.
+// Instead, tool-level gating is handled inside the MCP server itself.
+// The /mcp endpoint lets all authenticated users through, and each tool
+// checks the tier via the user record passed to createFortressServer.
 
 type Env = {
   SUPABASE_URL: string;
@@ -106,12 +111,15 @@ app.post("/mcp", async (c) => {
     }, 401);
   }
 
-  if (authResult.user.tier !== "ENTERPRISE") {
+  // Minimum tier for Fortress: TEAM
+  // Individual tools enforce their own tier gates (TEAM for 1-7, ENTERPRISE for 8-12)
+  const userRank = TIER_RANK[authResult.user.tier] ?? 0;
+  if (userRank < TIER_RANK.TEAM) {
     return c.json({
       jsonrpc: "2.0",
       id: requestId,
       result: {
-        content: [{ type: "text", text: ENTERPRISE_GATE_MESSAGE }],
+        content: [{ type: "text", text: TEAM_GATE_MESSAGE }],
         isError: true,
       },
     }, 200);
@@ -123,10 +131,12 @@ app.post("/mcp", async (c) => {
     body: rawBody,
   });
 
+  // Pass the user so the MCP server can enforce per-tool tier gates
   const server = createFortressServer(supabase, {
     supabase,
     notificationWebhookUrl: c.env.NOTIFICATION_WEBHOOK_URL,
     githubPat: c.env.GITHUB_PAT,
+    userTier: authResult.user.tier,
   });
   const transport = new WebStandardStreamableHTTPServerTransport({
     sessionIdGenerator: undefined,

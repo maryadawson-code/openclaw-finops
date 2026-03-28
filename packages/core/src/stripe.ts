@@ -2,7 +2,16 @@ import Stripe from "stripe";
 import { getSupabaseClient, upgradeUser } from "./supabase.js";
 import { sendProWelcomeEmail } from "./email.js";
 
-const ENTERPRISE_PRICE_ID = "price_1TG19DJ8qAPoi4y2q08hGQzo";
+// Map Stripe Price IDs to tiers.
+// Update these when you create new prices in Stripe.
+// Unmapped price IDs default to PRO.
+const PRICE_TO_TIER: Record<string, "PRO" | "TEAM" | "ENTERPRISE"> = {
+  // Enterprise (existing)
+  "price_1TG19DJ8qAPoi4y2q08hGQzo": "ENTERPRISE",
+  // Placeholders — replace with real Stripe Price IDs when created:
+  // "price_team_placeholder": "TEAM",
+  // "price_pro_placeholder": "PRO",
+};
 
 export interface StripeEnv {
   STRIPE_SECRET_KEY: string;
@@ -13,9 +22,18 @@ export interface StripeEnv {
 }
 
 /**
+ * Resolve a Stripe Price ID to an OpenClaw tier.
+ * Checks session metadata first, then line items.
+ */
+function resolveTier(priceId?: string): "PRO" | "TEAM" | "ENTERPRISE" {
+  if (priceId && PRICE_TO_TIER[priceId]) {
+    return PRICE_TO_TIER[priceId];
+  }
+  return "PRO"; // default
+}
+
+/**
  * Shared Stripe webhook handler for all OpenClaw servers.
- * Verifies the signature, processes checkout.session.completed,
- * upgrades the user, and sends the welcome email.
  */
 export async function handleStripeWebhook(
   rawBody: string,
@@ -38,7 +56,7 @@ export async function handleStripeWebhook(
     if (userId) {
       const supabase = getSupabaseClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_KEY);
       const priceId = session.metadata?.price_id;
-      const tier = priceId === ENTERPRISE_PRICE_ID ? "ENTERPRISE" as const : "PRO" as const;
+      const tier = resolveTier(priceId);
 
       const upgradedUser = await upgradeUser(supabase, userId, tier);
 

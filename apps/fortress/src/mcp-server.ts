@@ -758,11 +758,58 @@ export interface FortressEnv {
   supabase?: SupabaseClient;
   notificationWebhookUrl?: string;
   githubPat?: string;
+  userTier?: string;
 }
+
+const TEAM_TOOL_GATE =
+  "OpenClaw Fortress Core requires a TEAM subscription ($99/mo). " +
+  "Upgrade to prevent AI deployment drift: https://billing.openclaw.com/team";
+
+const ENTERPRISE_TOOL_GATE =
+  "OpenClaw Fortress Advanced requires an ENTERPRISE subscription ($499/mo). " +
+  "Upgrade to unlock visual contracts, automated rollbacks, and route parity: " +
+  "https://billing.openclaw.com/enterprise";
+
+// Tools 1-7: TEAM+ access. Tools 8-12: ENTERPRISE only.
+const ENTERPRISE_ONLY_TOOLS = new Set([
+  "run_accessibility_scan",
+  "run_visual_contract",
+  "verify_route_parity_and_metadata",
+  "request_human_checkpoint",
+  "trigger_automated_rollback",
+]);
 
 export function createFortressServer(supabase?: SupabaseClient, env?: FortressEnv): McpServer {
   const webhookUrl = env?.notificationWebhookUrl;
   const githubPat = env?.githubPat;
+  const userTier = env?.userTier || "FREE";
+  const tierRank = ({ FREE: 0, PRO: 1, TEAM: 2, ENTERPRISE: 3 } as Record<string, number>)[userTier] ?? 0;
+
+  // Helper: wraps a tool handler with tier gating
+  function gated<T>(
+    toolName: string,
+    handler: (args: T) => Promise<{ content: Array<{ type: "text"; text: string }>; isError?: boolean }>
+  ) {
+    return async (args: T) => {
+      const isAdvanced = ENTERPRISE_ONLY_TOOLS.has(toolName);
+
+      if (isAdvanced && tierRank < 3) {
+        return {
+          content: [{ type: "text" as const, text: ENTERPRISE_TOOL_GATE }],
+          isError: true,
+        };
+      }
+
+      if (!isAdvanced && tierRank < 2) {
+        return {
+          content: [{ type: "text" as const, text: TEAM_TOOL_GATE }],
+          isError: true,
+        };
+      }
+
+      return handler(args);
+    };
+  }
   const server = new McpServer({
     name: "openclaw-fortress",
     version: "1.0.0",
@@ -816,6 +863,9 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
         .describe("If true, append a cache-busting param and set no-cache headers to force an origin hit"),
     },
     async ({ target_url, expected_dom_signature, bypass_cache }) => {
+      // Tier gate: Tools 1-7 require TEAM+
+      if (tierRank < 2) return { content: [{ type: "text" as const, text: TEAM_TOOL_GATE }], isError: true };
+
       try {
         // Build the request URL
         let fetchUrl = target_url;
@@ -912,6 +962,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
         .describe("Array of files to scan. Each entry has a path and content string."),
     },
     async ({ files }) => {
+      if (tierRank < 2) return { content: [{ type: "text" as const, text: TEAM_TOOL_GATE }], isError: true };
       const result = scanFilesForForbidden(files);
       const report = formatFirewallReport(result, files.length);
 
@@ -940,6 +991,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
         .describe("The intended scope of the change"),
     },
     async ({ modified_files, declared_change_class }) => {
+      if (tierRank < 2) return { content: [{ type: "text" as const, text: TEAM_TOOL_GATE }], isError: true };
       const result = simulateBlast(modified_files, declared_change_class);
       const report = formatBlastReport(result);
 
@@ -977,6 +1029,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
         .describe("Strings that MUST NOT exist in either source or live output"),
     },
     async ({ route_manifest, source_content, expected_strings, forbidden_strings }) => {
+      if (tierRank < 2) return { content: [{ type: "text" as const, text: TEAM_TOOL_GATE }], isError: true };
       // Step 1: Check source
       const sourceChecks = checkStrings(source_content, expected_strings, forbidden_strings);
 
@@ -1088,6 +1141,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
         .describe("Expected SHA-256 hash of the asset (64-char hex string)"),
     },
     async ({ asset_url, expected_sha256 }) => {
+      if (tierRank < 2) return { content: [{ type: "text" as const, text: TEAM_TOOL_GATE }], isError: true };
       try {
         const res = await fetch(asset_url, {
           headers: {
@@ -1170,6 +1224,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
         .describe("Summary of what failed and what was attempted"),
     },
     async ({ attempt_count, failing_route, failure_log }) => {
+      if (tierRank < 2) return { content: [{ type: "text" as const, text: TEAM_TOOL_GATE }], isError: true };
       const timestamp = new Date().toISOString();
 
       let report = `## OpenClaw Fortress — Recovery Escalation\n\n`;
@@ -1211,6 +1266,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
         .describe("The asset purpose (e.g., 'primary_favicon') or route path (e.g., '/about'). Ignored for forbidden_strings."),
     },
     async ({ query_type, target }) => {
+      if (tierRank < 2) return { content: [{ type: "text" as const, text: TEAM_TOOL_GATE }], isError: true };
       if (!supabase) {
         return {
           content: [{
@@ -1336,6 +1392,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
         .describe("Raw HTML to scan directly (use this when the page isn't deployed yet)."),
     },
     async ({ target_url, html_content }) => {
+      if (tierRank < 3) return { content: [{ type: "text" as const, text: ENTERPRISE_TOOL_GATE }], isError: true };
       let html = html_content;
       let source = "provided HTML";
 
@@ -1416,6 +1473,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
         .describe("Acceptable visual difference percentage (default 2.0%)"),
     },
     async ({ target_url, baseline_image_url, tolerance_percent }) => {
+      if (tierRank < 3) return { content: [{ type: "text" as const, text: ENTERPRISE_TOOL_GATE }], isError: true };
       // Verify the target URL is reachable
       let status: number;
       let contentType: string;
@@ -1505,6 +1563,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
       }),
     },
     async ({ target_route, base_domain, expected_metadata }) => {
+      if (tierRank < 3) return { content: [{ type: "text" as const, text: ENTERPRISE_TOOL_GATE }], isError: true };
       const prettyUrl = `${base_domain}${target_route}`.replace(/\/$/, "");
       const staticUrl = `${base_domain}${target_route}.html`;
 
@@ -1671,6 +1730,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
         .describe("Brief description of what the agent is about to change"),
     },
     async ({ risk_category, change_summary }) => {
+      if (tierRank < 3) return { content: [{ type: "text" as const, text: ENTERPRISE_TOOL_GATE }], isError: true };
       const timestamp = new Date().toISOString();
       const riskLabel = CHECKPOINT_RISK_LABELS[risk_category] || risk_category;
 
@@ -1743,6 +1803,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
         .describe("Reason for the rollback (include failure details)"),
     },
     async ({ github_repo, reason }) => {
+      if (tierRank < 3) return { content: [{ type: "text" as const, text: ENTERPRISE_TOOL_GATE }], isError: true };
       const timestamp = new Date().toISOString();
 
       let rollbackDispatched = false;

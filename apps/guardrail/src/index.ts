@@ -6,13 +6,14 @@ import {
   extractApiKey,
   extractReferralCode,
   handleStripeWebhook,
+  TIER_RANK,
 } from "@openclaw/core";
 import { createGuardrailServer } from "./mcp-server.js";
 
-const ENTERPRISE_GATE_MESSAGE =
-  "OpenClaw Guardrail is an Enterprise-only security feature. " +
-  "To prevent AI-generated security breaches and 'Ghost Costs,' " +
-  "upgrade your organization here: https://billing.openclaw.com/enterprise";
+const TEAM_GATE_MESSAGE =
+  "OpenClaw Guardrail requires a TEAM subscription ($99/mo). " +
+  "Upgrade to scan infrastructure for security vulnerabilities and ghost costs: " +
+  "https://billing.openclaw.com/team";
 
 type Env = {
   SUPABASE_URL: string;
@@ -120,13 +121,14 @@ app.post("/mcp", async (c) => {
     }, 401);
   }
 
-  // --- Enterprise-only gate ---
-  if (authResult.user.tier !== "ENTERPRISE") {
+  // --- TEAM+ gate ---
+  const userRank = TIER_RANK[authResult.user.tier] ?? 0;
+  if (userRank < TIER_RANK.TEAM) {
     return c.json({
       jsonrpc: "2.0",
       id: requestId,
       result: {
-        content: [{ type: "text", text: ENTERPRISE_GATE_MESSAGE }],
+        content: [{ type: "text", text: TEAM_GATE_MESSAGE }],
         isError: true,
       },
     }, 200);
