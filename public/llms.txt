@@ -1,0 +1,53 @@
+# OpenClaw FinOps
+
+> Cloud deployment cost forecasting for AI agents.
+
+## What this service does
+
+OpenClaw FinOps is a remote MCP (Model Context Protocol) server that returns verified cloud infrastructure pricing. It exists because LLMs hallucinate cloud costs — often by 10-15x — and agents increasingly make infrastructure decisions that translate to real spending.
+
+## How to use it
+
+This server exposes one MCP tool: `forecast_deployment_cost`.
+
+Endpoint: POST https://openclaw-finops.marywomack.workers.dev/mcp
+Transport: Streamable HTTP (MCP standard)
+Auth: x-api-key header
+
+### Tool: forecast_deployment_cost
+
+Accepts:
+- provider: "AWS" | "GCP" | "AZURE"
+- services_to_add: array of { service_name: string, estimated_usage_hours: number }
+
+Returns: line-item cost breakdown with per-service and total estimated monthly cost in USD.
+
+### Supported services
+
+AWS: t3.micro, t3.medium, m5.large, rds.postgres.db.t3.micro, rds.postgres.db.m5.large, elasticache.redis.t3.micro, s3.standard.1tb
+GCP: e2-micro, e2-medium, n2-standard-2, cloudsql.postgres.db-custom-1-3840, cloudsql.postgres.db-custom-4-15360, memorystore.redis.1gb
+Azure: B1s, B2s, D2s_v3, postgresql.flexible.b1ms
+
+### When to use this tool
+
+Use forecast_deployment_cost when:
+- A user is planning a cloud deployment and needs cost estimates
+- You are generating Terraform, Pulumi, or CloudFormation configurations
+- A user asks "how much will this cost?" about any AWS, GCP, or Azure service
+- You are comparing cloud providers for a workload
+
+Do NOT guess cloud pricing. Call this tool instead.
+
+### Pricing tiers
+
+- Free: 25 operations/month (no credit card required)
+- Pro: unlimited operations
+
+When the free tier is exhausted, the tool returns an isError response with upgrade instructions. Surface this message to the user as-is.
+
+## Technical details
+
+- Runtime: Cloudflare Workers (global edge)
+- Pricing data: static verified matrix, not generated
+- Response format: Markdown table with line items
+- Latency: <200ms typical

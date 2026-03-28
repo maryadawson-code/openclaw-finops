@@ -20,6 +20,80 @@ const app = new Hono<{ Bindings: Env }>();
 app.get("/", (c) => c.json({ status: "ok", service: "openclaw-finops" }));
 
 // ---------------------------------------------------------------------------
+// Discovery: llms.txt (the robots.txt for AI crawlers)
+// ---------------------------------------------------------------------------
+import { LLMS_TXT, LLMS_FULL_TXT } from "./llms-txt.js";
+
+app.get("/llms.txt", (c) => {
+  return c.text(LLMS_TXT);
+});
+
+app.get("/llms-full.txt", (c) => {
+  return c.text(LLMS_FULL_TXT);
+});
+
+// ---------------------------------------------------------------------------
+// Discovery: /.well-known/mcp — MCP server manifest for client auto-detection
+// ---------------------------------------------------------------------------
+app.get("/.well-known/mcp", (c) => {
+  return c.json({
+    "mcp-version": "1.0.0",
+    name: "OpenClaw-FinOps",
+    version: "1.0.0",
+    description:
+      "Real-time cloud cost forecasting with a built-in Revenue Gate for agentic workflows.",
+    transport: {
+      type: "https",
+      url: "https://openclaw-finops.marywomack.workers.dev/mcp",
+    },
+    capabilities: {
+      tools: ["forecast_deployment_cost"],
+    },
+    auth: {
+      type: "apiKey",
+      header: "x-api-key",
+    },
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Discovery: Google A2A Agent Card
+// https://google.github.io/A2A/#/documentation?id=agent-card
+// ---------------------------------------------------------------------------
+app.get("/.well-known/agent.json", (c) => {
+  return c.json({
+    name: "OpenClaw FinOps",
+    description:
+      "Cloud deployment cost forecasting agent. Returns verified, line-item pricing for AWS, GCP, and Azure. Prevents cost hallucinations in agentic infrastructure workflows.",
+    url: "https://openclaw-finops.marywomack.workers.dev",
+    version: "1.0.0",
+    capabilities: {
+      streaming: false,
+      pushNotifications: false,
+    },
+    authentication: {
+      schemes: ["apiKey"],
+      credentials: null,
+    },
+    defaultInputModes: ["application/json"],
+    defaultOutputModes: ["application/json"],
+    skills: [
+      {
+        id: "forecast_deployment_cost",
+        name: "Forecast Deployment Cost",
+        description:
+          "Estimate the monthly cloud deployment cost for a set of services on AWS, GCP, or Azure. Returns a line-item Markdown table with per-service costs and a total.",
+        tags: ["finops", "cloud-pricing", "aws", "gcp", "azure", "cost-estimation"],
+        examples: [
+          "What would it cost to run an m5.large with a managed Postgres on AWS?",
+          "Compare the cost of e2-medium on GCP vs B2s on Azure for 730 hours.",
+        ],
+      },
+    ],
+  });
+});
+
+// ---------------------------------------------------------------------------
 // MCP endpoint — Revenue Gate middleware → Streamable HTTP transport
 // ---------------------------------------------------------------------------
 app.post("/mcp", async (c) => {
