@@ -50,6 +50,56 @@ npx @smithery/cli publish openclaw-finops
 
 ---
 
+## Anthropic Skills Repository
+
+**Status:** Ready to submit. `skills/openclaw-finops/SKILL.md` follows the template format.
+
+**Steps:**
+1. Fork https://github.com/anthropics/skills
+2. Copy the `skills/openclaw-finops/` directory from this repo into the fork's `skills/` directory
+3. Open a PR with title: "Add openclaw-finops: Cloud cost forecasting via MCP"
+4. PR description should highlight:
+   - Revenue Gate pattern (`isError: true` paywall as a security/business best practice)
+   - Prevents LLM cost hallucinations by grounding pricing in a verified matrix
+   - Remote MCP server — zero local dependencies
+
+---
+
+## AAIF (Agentic AI Foundation)
+
+**Context:** AAIF is a Linux Foundation directed fund co-founded by Anthropic, Block, and OpenAI.
+MCP is a founding project. As AAIF matures its registry/catalog processes, OpenClaw FinOps
+is positioned for inclusion as a reference implementation of revenue-gated MCP.
+
+**Current action:** No formal submission portal exists yet. Monitor:
+- https://aaif.io/ for registry announcements
+- https://github.com/modelcontextprotocol/ for catalog PRs
+
+**Preparation complete:**
+- `/.well-known/ai` follows IETF draft-aiendpoint-ai-discovery-00 (AAIF-aligned)
+- `/.well-known/mcp` follows SEP-1960 proposal conventions
+- `/.well-known/agent.json` follows Google A2A spec
+- `smithery.yaml` ready for Smithery (AAIF member: Anthropic)
+- Revenue Gate pattern documented as a reusable standard in SKILL.md
+
+---
+
+## Microsoft 365 Copilot
+
+**Status:** `copilot/declarativeAgent.json` and `copilot/openclaw-finops-plugin.json` ready.
+
+**Steps:**
+1. The declarative agent manifest requires wrapping the MCP endpoint behind an OpenAPI spec
+   (Copilot doesn't speak MCP natively — it uses API plugin manifests)
+2. Create an `openapi.yaml` describing the REST interface to `forecast_deployment_cost`
+3. Package as a Teams app: `manifest.json` + `declarativeAgent.json` + plugin + OpenAPI spec
+4. Submit via Microsoft Partner Center or Teams Developer Portal
+
+**Note:** When Microsoft adds native MCP support to Copilot (tracked in schema v1.5+ with
+`actions` extensibility), the `/.well-known/mcp` endpoint will handle discovery directly.
+
+---
+
 ## GitHub Topics (already applied)
 
 The repo has these topics for GitHub search discoverability:
@@ -67,3 +117,6 @@ The repo has these topics for GitHub search discoverability:
 - [ ] Hacker News — post from LAUNCH_POSTS.md
 - [ ] X/Twitter — post thread from LAUNCH_POSTS.md
 - [ ] LinkedIn — post from LAUNCH_POSTS.md
+- [ ] Anthropic Skills — fork repo, copy skills/openclaw-finops/, open PR
+- [ ] Microsoft Copilot — package declarativeAgent.json as Teams app (requires OpenAPI wrapper)
+- [ ] AAIF — monitor for registry launch, submit when portal opens

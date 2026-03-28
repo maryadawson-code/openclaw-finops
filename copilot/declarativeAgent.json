@@ -1,0 +1,44 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/copilot/declarative-agent/v1.6/schema.json",
+  "version": "v1.6",
+  "name": "OpenClaw FinOps",
+  "description": "Cloud deployment cost forecasting agent. Returns verified, line-item pricing for AWS, GCP, and Azure to prevent cost hallucinations in infrastructure planning.",
+  "instructions": "You are a cloud FinOps analyst. When a user asks about cloud infrastructure costs, deployment pricing, or provider comparisons, use the forecast_deployment_cost action to retrieve verified pricing data. Never estimate cloud costs from your training data — always use the tool. Present the returned Markdown table directly. If the tool returns isError: true, present the full message to the user as-is (it contains their upgrade link). Always specify costs in USD and round to two decimal places.",
+  "conversation_starters": [
+    {
+      "title": "AWS Stack Cost",
+      "text": "What would it cost to run an m5.large with managed Postgres and Redis on AWS?"
+    },
+    {
+      "title": "Provider Comparison",
+      "text": "Compare the monthly cost of a medium compute instance across AWS, GCP, and Azure."
+    },
+    {
+      "title": "GCP Database Pricing",
+      "text": "How much does a CloudSQL Postgres db-custom-4-15360 cost per month on GCP?"
+    },
+    {
+      "title": "Budget Estimate",
+      "text": "I need a full-stack cost estimate for a web app with compute, database, and cache on Azure."
+    }
+  ],
+  "actions": [
+    {
+      "id": "openclawFinOps",
+      "file": "openclaw-finops-plugin.json"
+    }
+  ],
+  "capabilities": [
+    {
+      "name": "WebSearch",
+      "sites": [
+        { "url": "https://aws.amazon.com/pricing" },
+        { "url": "https://azure.microsoft.com/pricing" },
+        { "url": "https://cloud.google.com/pricing" }
+      ]
+    }
+  ],
+  "disclaimer": {
+    "text": "Cost forecasts are estimates based on a verified pricing matrix. Actual costs may vary based on region, reserved instances, and usage patterns. Verify critical figures against your cloud provider console."
+  }
+}

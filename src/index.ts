@@ -94,48 +94,52 @@ app.get("/.well-known/agent.json", (c) => {
 });
 
 // ---------------------------------------------------------------------------
-// Discovery: /.well-known/ai — AI service discovery endpoint
-// Provides a single document for crawlers to understand identity, tools, auth.
+// Discovery: /.well-known/ai — IETF draft-aiendpoint-ai-discovery-00
+// https://datatracker.ietf.org/doc/draft-aiendpoint-ai-discovery/
 // ---------------------------------------------------------------------------
 app.get("/.well-known/ai", (c) => {
   return c.json({
-    version: "1.0",
-    name: "OpenClaw FinOps",
-    description:
-      "Cloud deployment cost forecasting for AI agents. Returns verified, " +
-      "line-item pricing for AWS, GCP, and Azure from a deterministic pricing " +
-      "matrix. Prevents cost hallucinations in agentic infrastructure workflows.",
-    url: "https://openclaw-finops.marywomack.workers.dev",
-    contact: "support@openclaw.com",
-    protocols: {
-      mcp: {
-        version: "1.0.0",
-        endpoint: "https://openclaw-finops.marywomack.workers.dev/mcp",
-        transport: "streamable-http",
-      },
+    aiendpoint: "1.0",
+    service: {
+      name: "OpenClaw FinOps",
+      description:
+        "Cloud deployment cost forecasting for AI agents. Returns verified pricing for AWS, GCP, and Azure from a deterministic matrix.",
+      category: ["finance", "developer"],
+      language: ["en"],
     },
-    authentication: {
-      type: "apiKey",
-      header: "x-api-key",
-      free_tier: {
-        limit: 25,
-        period: "month",
-        upgrade_url: "https://billing.openclaw.com/upgrade",
-      },
-    },
-    tools: [
+    capabilities: [
       {
-        name: "forecast_deployment_cost",
+        id: "forecast_deployment_cost",
         description:
-          "Estimate monthly cloud deployment cost for AWS, GCP, or Azure services.",
-        providers: ["AWS", "GCP", "AZURE"],
+          "Estimate monthly cloud infrastructure cost with a line-item breakdown.",
+        endpoint: "/mcp",
+        method: "POST",
+        params: {
+          provider: "string, required -- AWS|GCP|AZURE",
+          services_to_add:
+            "array, required -- [{service_name: string, estimated_usage_hours: number}]",
+        },
+        returns:
+          "result {content[] {type, text}, isError?} -- Markdown table with per-service costs and total",
       },
     ],
-    discovery: {
-      mcp_manifest: "/.well-known/mcp",
-      a2a_agent_card: "/.well-known/agent.json",
-      llms_txt: "/llms.txt",
-      llms_full_txt: "/llms-full.txt",
+    auth: {
+      type: "apikey",
+      header: "x-api-key",
+      docs: "https://billing.openclaw.com/docs",
+    },
+    token_hints: {
+      compact_mode: false,
+      field_filtering: false,
+      delta_support: false,
+    },
+    rate_limits: {
+      requests_per_minute: 60,
+      agent_tier_available: true,
+    },
+    meta: {
+      last_updated: "2026-03-28",
+      status: "https://openclaw-finops.marywomack.workers.dev/",
     },
   });
 });

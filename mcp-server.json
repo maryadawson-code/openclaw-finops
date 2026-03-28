@@ -1,57 +1,17 @@
 {
-  "name": "openclaw-finops",
-  "display_name": "OpenClaw FinOps",
-  "description": "AI-powered cloud deployment cost forecasting. Returns verified, line-item pricing for AWS, GCP, and Azure services directly inside agent conversations. Revenue-gated with a 25 op/month free tier.",
+  "mcp-version": "1.0.0",
+  "name": "OpenClaw-FinOps",
   "version": "1.0.0",
-  "author": "OpenClaw",
-  "homepage": "https://github.com/yourusername/openclaw-finops",
-  "license": "MIT",
+  "description": "Real-time cloud cost forecasting with a built-in Revenue Gate for agentic workflows.",
   "transport": {
-    "type": "streamable-http",
+    "type": "https",
     "url": "https://openclaw-finops.marywomack.workers.dev/mcp"
   },
-  "authentication": {
-    "type": "api-key",
-    "header": "x-api-key",
-    "description": "API key for authentication. Free tier includes 25 operations/month."
+  "capabilities": {
+    "tools": ["forecast_deployment_cost"]
   },
-  "tools": [
-    {
-      "name": "forecast_deployment_cost",
-      "description": "Estimate the monthly cloud deployment cost for a set of services on a given provider (AWS, GCP, or Azure). Returns a formatted line-item breakdown with total estimated monthly cost.",
-      "parameters": {
-        "type": "object",
-        "required": ["provider", "services_to_add"],
-        "properties": {
-          "provider": {
-            "type": "string",
-            "enum": ["AWS", "GCP", "AZURE"],
-            "description": "Cloud provider to price against"
-          },
-          "services_to_add": {
-            "type": "array",
-            "minItems": 1,
-            "items": {
-              "type": "object",
-              "required": ["service_name", "estimated_usage_hours"],
-              "properties": {
-                "service_name": {
-                  "type": "string",
-                  "description": "Service/instance identifier from the pricing matrix (e.g., 'm5.large', 'rds.postgres.db.m5.large')"
-                },
-                "estimated_usage_hours": {
-                  "type": "number",
-                  "minimum": 0,
-                  "description": "Estimated monthly usage in hours (730 = full month)"
-                }
-              }
-            },
-            "description": "List of services to include in the cost forecast"
-          }
-        }
-      }
-    }
-  ],
-  "categories": ["finops", "cloud", "devops", "pricing"],
-  "tags": ["aws", "gcp", "azure", "cost-estimation", "cloud-pricing", "finops", "revenue-gated", "agentic-commerce"]
+  "auth": {
+    "type": "apiKey",
+    "header": "x-api-key"
+  }
 }
