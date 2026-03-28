@@ -663,7 +663,75 @@ function formatA11yReport(violations: A11yViolation[], url: string): string {
 }
 
 // ---------------------------------------------------------------------------
-// MCP Server — all nine tools
+// ---------------------------------------------------------------------------
+// Tool 10: verify_route_parity_and_metadata — §10.7 + §10.9
+// ---------------------------------------------------------------------------
+
+interface MetadataViolation {
+  field: string;
+  expected: string;
+  actual: string;
+}
+
+function extractMetadata(html: string): {
+  title: string | null;
+  canonical: string | null;
+  ogTitle: string | null;
+  ogDescription: string | null;
+  ogImage: string | null;
+  description: string | null;
+} {
+  const titleMatch = /<title[^>]*>([^<]*)<\/title>/i.exec(html);
+  const canonicalMatch = /<link[^>]*rel\s*=\s*["']canonical["'][^>]*href\s*=\s*["']([^"']+)["']/i.exec(html)
+    || /<link[^>]*href\s*=\s*["']([^"']+)["'][^>]*rel\s*=\s*["']canonical["']/i.exec(html);
+  const ogTitleMatch = /<meta[^>]*property\s*=\s*["']og:title["'][^>]*content\s*=\s*["']([^"']+)["']/i.exec(html)
+    || /<meta[^>]*content\s*=\s*["']([^"']+)["'][^>]*property\s*=\s*["']og:title["']/i.exec(html);
+  const ogDescMatch = /<meta[^>]*property\s*=\s*["']og:description["'][^>]*content\s*=\s*["']([^"']+)["']/i.exec(html)
+    || /<meta[^>]*content\s*=\s*["']([^"']+)["'][^>]*property\s*=\s*["']og:description["']/i.exec(html);
+  const ogImageMatch = /<meta[^>]*property\s*=\s*["']og:image["'][^>]*content\s*=\s*["']([^"']+)["']/i.exec(html)
+    || /<meta[^>]*content\s*=\s*["']([^"']+)["'][^>]*property\s*=\s*["']og:image["']/i.exec(html);
+  const descMatch = /<meta[^>]*name\s*=\s*["']description["'][^>]*content\s*=\s*["']([^"']+)["']/i.exec(html)
+    || /<meta[^>]*content\s*=\s*["']([^"']+)["'][^>]*name\s*=\s*["']description["']/i.exec(html);
+
+  return {
+    title: titleMatch ? titleMatch[1].trim() : null,
+    canonical: canonicalMatch ? canonicalMatch[1].trim() : null,
+    ogTitle: ogTitleMatch ? ogTitleMatch[1].trim() : null,
+    ogDescription: ogDescMatch ? ogDescMatch[1].trim() : null,
+    ogImage: ogImageMatch ? ogImageMatch[1].trim() : null,
+    description: descMatch ? descMatch[1].trim() : null,
+  };
+}
+
+function stripDynamicContent(html: string): string {
+  // Remove script tags and their content (dynamic injection)
+  let cleaned = html.replace(/<script[\s\S]*?<\/script>/gi, "");
+  // Remove inline event handlers
+  cleaned = cleaned.replace(/\bon\w+\s*=\s*["'][^"']*["']/gi, "");
+  // Normalize whitespace
+  cleaned = cleaned.replace(/\s+/g, " ").trim();
+  return cleaned;
+}
+
+function computeContentSimilarity(a: string, b: string): number {
+  if (a === b) return 100;
+  if (!a || !b) return 0;
+  // Simple character-level similarity using longest common substring ratio
+  const shorter = a.length < b.length ? a : b;
+  const longer = a.length >= b.length ? a : b;
+  if (longer.length === 0) return 100;
+
+  // Sample-based comparison for performance on large pages
+  const sampleSize = Math.min(shorter.length, 2000);
+  const sampleA = shorter.substring(0, sampleSize);
+  let matches = 0;
+  for (let i = 0; i < sampleA.length; i++) {
+    if (sampleA[i] === longer[i]) matches++;
+  }
+  return Math.round((matches / sampleSize) * 100);
+}
+
+// MCP Server — all ten tools
 // ---------------------------------------------------------------------------
 
 export function createFortressServer(supabase?: SupabaseClient): McpServer {
@@ -687,7 +755,10 @@ export function createFortressServer(supabase?: SupabaseClient): McpServer {
       "or content modifications to understand the strict parameters you must operate within. " +
       "Your prompt context is NOT the source of truth; the registry is. " +
       "You MUST run run_accessibility_scan on any structural HTML/JSX changes. " +
-      "You MUST run run_visual_contract on any CSS/Tailwind or layout changes before finalizing.",
+      "You MUST run run_visual_contract on any CSS/Tailwind or layout changes before finalizing. " +
+      "You MUST run verify_route_parity_and_metadata after any deployment that modifies routing " +
+      "config, the <head> block, SEO tags, or shared layouts. A FAIL status requires immediate " +
+      "rollback or correction.",
   });
 
   server.tool(
@@ -1368,6 +1439,184 @@ export function createFortressServer(supabase?: SupabaseClient): McpServer {
       return {
         content: [{ type: "text" as const, text: report }],
         isError: false,
+      };
+    }
+  );
+
+  // -----------------------------------------------------------------------
+  // Tool 10: verify_route_parity_and_metadata
+  // -----------------------------------------------------------------------
+  server.tool(
+    "verify_route_parity_and_metadata",
+    "Verify route parity (pretty URL vs static .html) and validate SEO metadata (<title>, " +
+      "canonical, og:title). Run after ANY deployment that modifies routing, <head>, SEO tags, " +
+      "or shared layouts. A FAIL requires immediate rollback or correction.",
+    {
+      target_route: z
+        .string()
+        .describe("Route path to verify (e.g., '/about', '/pricing')"),
+      base_domain: z
+        .string()
+        .url()
+        .describe("Base domain (e.g., 'https://app.example.com')"),
+      expected_metadata: z.object({
+        title: z
+          .string()
+          .describe("Expected <title> tag content"),
+        canonical_url: z
+          .string()
+          .describe("Expected canonical URL"),
+        require_og: z
+          .boolean()
+          .default(false)
+          .describe("Whether og:title must be present"),
+      }),
+    },
+    async ({ target_route, base_domain, expected_metadata }) => {
+      const prettyUrl = `${base_domain}${target_route}`.replace(/\/$/, "");
+      const staticUrl = `${base_domain}${target_route}.html`;
+
+      // Step 1: Fetch both routes
+      let prettyHtml: string | null = null;
+      let prettyStatus = 0;
+      let staticHtml: string | null = null;
+      let staticStatus = 0;
+
+      try {
+        const prettyRes = await fetch(prettyUrl, {
+          headers: { "User-Agent": "OpenClaw-Fortress/1.0 (Route Parity)", Accept: "text/html,*/*" },
+          redirect: "follow",
+        });
+        prettyStatus = prettyRes.status;
+        if (prettyRes.ok) prettyHtml = await prettyRes.text();
+      } catch {}
+
+      try {
+        const staticRes = await fetch(staticUrl, {
+          headers: { "User-Agent": "OpenClaw-Fortress/1.0 (Route Parity)", Accept: "text/html,*/*" },
+          redirect: "follow",
+        });
+        staticStatus = staticRes.status;
+        if (staticRes.ok) staticHtml = await staticRes.text();
+      } catch {}
+
+      // Determine which HTML to use for metadata extraction
+      const html = prettyHtml || staticHtml;
+
+      // Step 1 result: Route parity
+      let parityStatus: "MATCH" | "MISMATCH" | "SINGLE_ROUTE" | "BOTH_FAILED";
+      let parityDetail: string;
+
+      if (!prettyHtml && !staticHtml) {
+        parityStatus = "BOTH_FAILED";
+        parityDetail = `Both ${prettyUrl} (HTTP ${prettyStatus}) and ${staticUrl} (HTTP ${staticStatus}) returned non-200 responses.`;
+      } else if (!prettyHtml || !staticHtml) {
+        parityStatus = "SINGLE_ROUTE";
+        const working = prettyHtml ? prettyUrl : staticUrl;
+        const failing = prettyHtml ? staticUrl : prettyUrl;
+        const failStatus = prettyHtml ? staticStatus : prettyStatus;
+        parityDetail = `Only ${working} returns content. ${failing} returned HTTP ${failStatus}. This is normal for SPAs and server-rendered apps that don't serve .html files.`;
+      } else {
+        const cleanPretty = stripDynamicContent(prettyHtml);
+        const cleanStatic = stripDynamicContent(staticHtml);
+        const similarity = computeContentSimilarity(cleanPretty, cleanStatic);
+
+        if (similarity >= 90) {
+          parityStatus = "MATCH";
+          parityDetail = `Pretty and static routes return ${similarity}% similar content (after stripping dynamic scripts).`;
+        } else {
+          parityStatus = "MISMATCH";
+          parityDetail = `Content similarity is only ${similarity}%. Pretty route and .html route serve different content. This may cause SEO duplication or inconsistent user experience.`;
+        }
+      }
+
+      // Step 2: Metadata extraction and comparison
+      const metadataViolations: MetadataViolation[] = [];
+
+      if (html) {
+        const meta = extractMetadata(html);
+
+        // Check title
+        if (meta.title !== expected_metadata.title) {
+          metadataViolations.push({
+            field: "<title>",
+            expected: expected_metadata.title,
+            actual: meta.title || "(missing)",
+          });
+        }
+
+        // Check canonical
+        if (meta.canonical !== expected_metadata.canonical_url) {
+          metadataViolations.push({
+            field: '<link rel="canonical">',
+            expected: expected_metadata.canonical_url,
+            actual: meta.canonical || "(missing)",
+          });
+        }
+
+        // Check og:title if required
+        if (expected_metadata.require_og) {
+          if (!meta.ogTitle) {
+            metadataViolations.push({
+              field: "og:title",
+              expected: "(must be present)",
+              actual: "(missing)",
+            });
+          }
+        }
+      } else {
+        metadataViolations.push({
+          field: "HTML",
+          expected: "200 OK response",
+          actual: "No HTML available — both routes failed",
+        });
+      }
+
+      // Build report
+      const overallStatus =
+        parityStatus === "MISMATCH" || parityStatus === "BOTH_FAILED" || metadataViolations.length > 0
+          ? "FAIL"
+          : "PASS";
+
+      let report = `## OpenClaw Fortress — Route Parity & Metadata Verification\n\n`;
+      report += `**Route:** \`${target_route}\`\n`;
+      report += `**Domain:** \`${base_domain}\`\n`;
+      report += `**Status:** **${overallStatus}**\n\n`;
+
+      report += `### Route Parity (§10.7)\n\n`;
+      report += `| Route | URL | HTTP |\n`;
+      report += `|-------|-----|------|\n`;
+      report += `| Pretty | \`${prettyUrl}\` | ${prettyStatus} |\n`;
+      report += `| Static | \`${staticUrl}\` | ${staticStatus} |\n`;
+      report += `\n**Parity:** ${parityStatus}\n`;
+      report += `${parityDetail}\n\n`;
+
+      report += `### Metadata Verification (§10.9)\n\n`;
+
+      if (html) {
+        const meta = extractMetadata(html);
+        report += `| Tag | Found | Expected | Match |\n`;
+        report += `|-----|-------|----------|-------|\n`;
+        report += `| \`<title>\` | ${meta.title || "(missing)"} | ${expected_metadata.title} | ${meta.title === expected_metadata.title ? "✓" : "**✗**"} |\n`;
+        report += `| \`canonical\` | ${meta.canonical || "(missing)"} | ${expected_metadata.canonical_url} | ${meta.canonical === expected_metadata.canonical_url ? "✓" : "**✗**"} |\n`;
+        if (expected_metadata.require_og) {
+          report += `| \`og:title\` | ${meta.ogTitle || "(missing)"} | (required) | ${meta.ogTitle ? "✓" : "**✗**"} |\n`;
+        }
+        if (meta.description) report += `| \`description\` | ${meta.description.substring(0, 60)}... | — | info |\n`;
+        if (meta.ogImage) report += `| \`og:image\` | ${meta.ogImage.substring(0, 60)}... | — | info |\n`;
+      }
+
+      if (metadataViolations.length > 0) {
+        report += `\n**Violations:**\n\n`;
+        for (const v of metadataViolations) {
+          report += `- **${v.field}**: expected \`${v.expected}\`, got \`${v.actual}\`\n`;
+        }
+        report += `\n> **Fix metadata violations before finalizing.** Mismatched titles and canonicals harm SEO and social sharing.\n`;
+      }
+
+      return {
+        content: [{ type: "text" as const, text: report }],
+        isError: overallStatus === "FAIL",
       };
     }
   );
