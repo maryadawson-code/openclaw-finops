@@ -233,9 +233,14 @@ app.post("/api/webhook/stripe", async (c) => {
 
     if (userId) {
       const supabase = getSupabaseClient(c.env.SUPABASE_URL, c.env.SUPABASE_SERVICE_KEY);
-      const upgradedUser = await upgradeUser(supabase, userId);
 
-      // Send Pro welcome email with setup instructions
+      // Determine tier from the price ID in session metadata or line items
+      const priceId = session.metadata?.price_id;
+      const tier = priceId === "price_enterprise_id" ? "ENTERPRISE" as const : "PRO" as const;
+
+      const upgradedUser = await upgradeUser(supabase, userId, tier);
+
+      // Send welcome email with setup instructions
       if (upgradedUser && session.customer_email) {
         await sendProWelcomeEmail(
           {
