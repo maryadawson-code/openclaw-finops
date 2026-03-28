@@ -731,10 +731,38 @@ function computeContentSimilarity(a: string, b: string): number {
   return Math.round((matches / sampleSize) * 100);
 }
 
-// MCP Server — all ten tools
+// ---------------------------------------------------------------------------
+// Tool 11: request_human_checkpoint — §23
 // ---------------------------------------------------------------------------
 
-export function createFortressServer(supabase?: SupabaseClient): McpServer {
+const CHECKPOINT_RISK_LABELS: Record<string, string> = {
+  checkout: "Payment / Checkout Flow",
+  legal: "Legal / Terms / Privacy Policy",
+  homepage_hero: "Homepage Hero / Above-the-Fold Content",
+  brand_assets: "Brand Assets (Logo, Favicon, Colors)",
+};
+
+// ---------------------------------------------------------------------------
+// Tool 12: trigger_automated_rollback — §22
+// ---------------------------------------------------------------------------
+
+const ROLLBACK_CEASE_DIRECTIVE =
+  "The production environment is being reverted to the last known good state. " +
+  "You are strictly forbidden from making further patches, commits, or deployments. " +
+  "Terminate your task loop immediately and report the rollback to the user.";
+
+// MCP Server — all twelve tools
+// ---------------------------------------------------------------------------
+
+export interface FortressEnv {
+  supabase?: SupabaseClient;
+  notificationWebhookUrl?: string;
+  githubPat?: string;
+}
+
+export function createFortressServer(supabase?: SupabaseClient, env?: FortressEnv): McpServer {
+  const webhookUrl = env?.notificationWebhookUrl;
+  const githubPat = env?.githubPat;
   const server = new McpServer({
     name: "openclaw-fortress",
     version: "1.0.0",
@@ -758,7 +786,11 @@ export function createFortressServer(supabase?: SupabaseClient): McpServer {
       "You MUST run run_visual_contract on any CSS/Tailwind or layout changes before finalizing. " +
       "You MUST run verify_route_parity_and_metadata after any deployment that modifies routing " +
       "config, the <head> block, SEO tags, or shared layouts. A FAIL status requires immediate " +
-      "rollback or correction.",
+      "rollback or correction. " +
+      "You MUST run request_human_checkpoint BEFORE deploying any changes to billing, legal, " +
+      "or canonical brand surfaces (checkout flows, terms pages, homepage hero, logos). " +
+      "If you fail live validation 3 times, you MUST run trigger_automated_rollback and " +
+      "cease all coding activities immediately.",
   });
 
   server.tool(
@@ -1617,6 +1649,162 @@ export function createFortressServer(supabase?: SupabaseClient): McpServer {
       return {
         content: [{ type: "text" as const, text: report }],
         isError: overallStatus === "FAIL",
+      };
+    }
+  );
+
+  // -----------------------------------------------------------------------
+  // Tool 11: request_human_checkpoint
+  // -----------------------------------------------------------------------
+  server.tool(
+    "request_human_checkpoint",
+    "Request human approval before deploying changes to high-risk surfaces. MUST be called " +
+      "before any changes to checkout/billing flows, legal pages, homepage hero content, or " +
+      "brand assets. Returns BLOCKED_PENDING_APPROVAL — you must stop and wait for confirmation.",
+    {
+      risk_category: z
+        .enum(["checkout", "legal", "homepage_hero", "brand_assets"])
+        .describe("Category of the high-risk surface being modified"),
+      change_summary: z
+        .string()
+        .min(1)
+        .describe("Brief description of what the agent is about to change"),
+    },
+    async ({ risk_category, change_summary }) => {
+      const timestamp = new Date().toISOString();
+      const riskLabel = CHECKPOINT_RISK_LABELS[risk_category] || risk_category;
+
+      // Attempt to send notification webhook if configured
+      let notificationSent = false;
+      if (webhookUrl) {
+        try {
+          const res = await fetch(webhookUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              text: `⚠️ HUMAN CHECKPOINT REQUIRED\n\nRisk Category: ${riskLabel}\nSummary: ${change_summary}\nTimestamp: ${timestamp}\n\nAn AI agent is attempting to modify a high-risk surface. Review and approve or reject via the chat interface.`,
+              category: risk_category,
+              summary: change_summary,
+              timestamp,
+            }),
+          });
+          notificationSent = res.ok;
+        } catch {
+          // Notification failure is non-fatal — the tool still blocks
+        }
+      }
+
+      let report = `## OpenClaw Fortress — Human Checkpoint\n\n`;
+      report += `**Status:** **BLOCKED_PENDING_APPROVAL**\n`;
+      report += `**Risk category:** ${riskLabel}\n`;
+      report += `**Timestamp:** ${timestamp}\n\n`;
+      report += `### Change Summary\n\n${change_summary}\n\n`;
+      report += `---\n\n`;
+
+      if (notificationSent) {
+        report += `Notification sent to the operations team via webhook.\n\n`;
+      } else if (webhookUrl) {
+        report += `⚠️ Webhook notification failed — manual approval still required.\n\n`;
+      }
+
+      report += `### MANDATORY DIRECTIVE\n\n`;
+      report += `> You must **stop all execution** and wait for the human to confirm `;
+      report += `via the chat interface. Do not proceed with any file writes, builds, `;
+      report += `or deployments to the \`${riskLabel}\` surface until explicit approval `;
+      report += `is received.\n\n`;
+      report += `Present this checkpoint to the user:\n\n`;
+      report += `"I need your approval before proceeding. I'm about to modify **${riskLabel}**. `;
+      report += `Here's what I plan to change: ${change_summary}. `;
+      report += `Please reply **approved** to continue or **rejected** to abort."\n`;
+
+      return {
+        content: [{ type: "text" as const, text: report }],
+        isError: true, // isError ensures the agent treats this as a blocking response
+      };
+    }
+  );
+
+  // -----------------------------------------------------------------------
+  // Tool 12: trigger_automated_rollback
+  // -----------------------------------------------------------------------
+  server.tool(
+    "trigger_automated_rollback",
+    "Trigger an automated production rollback via GitHub Actions. Call this after 3 consecutive " +
+      "live validation failures. Dispatches the rollback.yml workflow and returns a mandatory " +
+      "cease directive. You MUST obey the directive and terminate all coding activities.",
+    {
+      github_repo: z
+        .string()
+        .regex(/^[^/]+\/[^/]+$/, "Must be in 'owner/repo' format")
+        .describe("GitHub repository (e.g., 'maryadawson-code/openclaw-finops')"),
+      reason: z
+        .string()
+        .min(1)
+        .describe("Reason for the rollback (include failure details)"),
+    },
+    async ({ github_repo, reason }) => {
+      const timestamp = new Date().toISOString();
+
+      let rollbackDispatched = false;
+      let dispatchError: string | null = null;
+
+      if (githubPat) {
+        try {
+          const res = await fetch(
+            `https://api.github.com/repos/${github_repo}/actions/workflows/rollback.yml/dispatches`,
+            {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${githubPat}`,
+                Accept: "application/vnd.github.v3+json",
+                "User-Agent": "OpenClaw-Fortress/1.0",
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                ref: "main",
+                inputs: {
+                  reason,
+                  triggered_by: "openclaw-fortress",
+                  timestamp,
+                },
+              }),
+            }
+          );
+
+          if (res.status === 204 || res.ok) {
+            rollbackDispatched = true;
+          } else {
+            const body = await res.text();
+            dispatchError = `GitHub API returned ${res.status}: ${body.substring(0, 200)}`;
+          }
+        } catch (err: any) {
+          dispatchError = err.message;
+        }
+      } else {
+        dispatchError = "GITHUB_PAT not configured. Automated rollback requires a GitHub Personal Access Token.";
+      }
+
+      let report = `## OpenClaw Fortress — Automated Rollback\n\n`;
+      report += `**Status:** **ROLLBACK_INITIATED**\n`;
+      report += `**Repository:** \`${github_repo}\`\n`;
+      report += `**Timestamp:** ${timestamp}\n\n`;
+      report += `### Reason\n\n${reason}\n\n`;
+
+      if (rollbackDispatched) {
+        report += `GitHub Actions workflow \`rollback.yml\` dispatched successfully.\n\n`;
+      } else {
+        report += `⚠️ **Rollback dispatch failed:** ${dispatchError}\n\n`;
+        report += `**Manual rollback required.** Run:\n`;
+        report += `\`\`\`bash\ncd ${github_repo.split("/")[1]} && git revert HEAD --no-edit && git push origin main\n\`\`\`\n\n`;
+      }
+
+      report += `---\n\n`;
+      report += `### MANDATORY DIRECTIVE\n\n`;
+      report += `> ${ROLLBACK_CEASE_DIRECTIVE}\n`;
+
+      return {
+        content: [{ type: "text" as const, text: report }],
+        isError: true,
       };
     }
   );

@@ -20,6 +20,8 @@ type Env = {
   STRIPE_SECRET_KEY: string;
   STRIPE_WEBHOOK_SECRET: string;
   RESEND_API_KEY?: string;
+  NOTIFICATION_WEBHOOK_URL?: string;
+  GITHUB_PAT?: string;
 };
 
 const app = new Hono<{ Bindings: Env }>();
@@ -121,7 +123,11 @@ app.post("/mcp", async (c) => {
     body: rawBody,
   });
 
-  const server = createFortressServer(supabase);
+  const server = createFortressServer(supabase, {
+    supabase,
+    notificationWebhookUrl: c.env.NOTIFICATION_WEBHOOK_URL,
+    githubPat: c.env.GITHUB_PAT,
+  });
   const transport = new WebStandardStreamableHTTPServerTransport({
     sessionIdGenerator: undefined,
     enableJsonResponse: true,
