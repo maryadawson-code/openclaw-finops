@@ -335,7 +335,104 @@ function formatBlastReport(result: BlastResult): string {
 }
 
 // ---------------------------------------------------------------------------
-// MCP Server — all three tools
+// Tool 4: reconcile_deployment_state — source vs live comparison
+// ---------------------------------------------------------------------------
+
+interface StringCheckResult {
+  expected_present: Array<{ str: string; found: boolean }>;
+  forbidden_absent: Array<{ str: string; found: boolean }>;
+  passed: boolean;
+}
+
+function checkStrings(
+  body: string,
+  expected: string[],
+  forbidden: string[]
+): StringCheckResult {
+  const expectedResults = expected.map((s) => ({
+    str: s,
+    found: body.includes(s),
+  }));
+  const forbiddenResults = forbidden.map((s) => ({
+    str: s,
+    found: body.includes(s),
+  }));
+
+  const passed =
+    expectedResults.every((r) => r.found) &&
+    forbiddenResults.every((r) => !r.found);
+
+  return {
+    expected_present: expectedResults,
+    forbidden_absent: forbiddenResults,
+    passed,
+  };
+}
+
+type ReconcileStatus = "SYNCED" | "DIVERGED";
+
+interface ReconcileResult {
+  status: ReconcileStatus;
+  source_state: "PASS" | "FAIL";
+  live_state: "PASS" | "FAIL";
+  live_http_status: number;
+  live_cache_verdict: string;
+  source_checks: StringCheckResult;
+  live_checks: StringCheckResult;
+  mismatch_reason: string;
+}
+
+function formatReconcileReport(r: ReconcileResult, manifest: { source_path: string; live_url: string }): string {
+  let report = `## OpenClaw Fortress — Deployment State Reconciliation\n\n`;
+  report += `**Source:** \`${manifest.source_path}\`\n`;
+  report += `**Live:** \`${manifest.live_url}\`\n`;
+  report += `**Status:** **${r.status}**\n`;
+  report += `**Source state:** ${r.source_state} | **Live state:** ${r.live_state}\n`;
+  report += `**Live HTTP:** ${r.live_http_status} | **Cache:** ${r.live_cache_verdict}\n\n`;
+
+  if (r.status === "SYNCED") {
+    report += `Source and live states are consistent. All expected strings present, all forbidden strings absent in both.\n`;
+    return report;
+  }
+
+  report += `**Mismatch:** ${r.mismatch_reason}\n\n`;
+
+  // Expected strings table
+  report += `### Expected Strings\n\n`;
+  report += `| String | Source | Live |\n`;
+  report += `|--------|--------|------|\n`;
+  for (let i = 0; i < r.source_checks.expected_present.length; i++) {
+    const s = r.source_checks.expected_present[i];
+    const l = r.live_checks.expected_present[i];
+    const sIcon = s.found ? "FOUND" : "**MISSING**";
+    const lIcon = l.found ? "FOUND" : "**MISSING**";
+    const display = s.str.length > 40 ? s.str.substring(0, 37) + "..." : s.str;
+    report += `| \`${display}\` | ${sIcon} | ${lIcon} |\n`;
+  }
+
+  // Forbidden strings table
+  if (r.source_checks.forbidden_absent.length > 0) {
+    report += `\n### Forbidden Strings\n\n`;
+    report += `| String | Source | Live |\n`;
+    report += `|--------|--------|------|\n`;
+    for (let i = 0; i < r.source_checks.forbidden_absent.length; i++) {
+      const s = r.source_checks.forbidden_absent[i];
+      const l = r.live_checks.forbidden_absent[i];
+      const sIcon = s.found ? "**PRESENT (BAD)**" : "absent" ;
+      const lIcon = l.found ? "**PRESENT (BAD)**" : "absent";
+      const display = s.str.length > 40 ? s.str.substring(0, 37) + "..." : s.str;
+      report += `| \`${display}\` | ${sIcon} | ${lIcon} |\n`;
+    }
+  }
+
+  report += `\n> **Do not mark this task complete until status is SYNCED.** `;
+  report += `Investigate the build pipeline, routing config, or edge cache.\n`;
+
+  return report;
+}
+
+// ---------------------------------------------------------------------------
+// MCP Server — all four tools
 // ---------------------------------------------------------------------------
 
 export function createFortressServer(): McpServer {
@@ -347,7 +444,10 @@ export function createFortressServer(): McpServer {
       "You MUST run simulate_blast_radius before executing any file writes to verify " +
       "the change scope matches the declared intent. You MUST run pre_flight_firewall " +
       "before executing any build or git commit commands to catch forbidden content. " +
-      "Use verify_live_state to confirm deployments are live and not cache-masked.",
+      "Use verify_live_state to confirm deployments are live and not cache-masked. " +
+      "You are strictly forbidden from marking a task complete until reconcile_deployment_state " +
+      "returns status: 'SYNCED'. If it returns 'DIVERGED', you must investigate the build " +
+      "step, routing configuration, or edge cache before proceeding.",
   });
 
   server.tool(
@@ -503,6 +603,125 @@ export function createFortressServer(): McpServer {
       return {
         content: [{ type: "text" as const, text: report }],
         isError: result.status === "BLOCKED",
+      };
+    }
+  );
+
+  // -----------------------------------------------------------------------
+  // Tool 4: reconcile_deployment_state
+  // -----------------------------------------------------------------------
+  server.tool(
+    "reconcile_deployment_state",
+    "Compare source code against the live deployment to detect drift. Checks that expected " +
+      "strings are present and forbidden strings are absent in BOTH the source and the live URL. " +
+      "Returns SYNCED or DIVERGED. You MUST NOT mark a task complete until this returns SYNCED.",
+    {
+      route_manifest: z.object({
+        source_path: z.string().describe("Path of the source file being verified (for reporting)"),
+        live_url: z.string().url().describe("The live URL to fetch and compare against"),
+      }),
+      source_content: z
+        .string()
+        .min(1)
+        .describe("The full content of the source file (provided by the agent)"),
+      expected_strings: z
+        .array(z.string())
+        .min(1)
+        .describe("Strings that MUST exist in both source and live output"),
+      forbidden_strings: z
+        .array(z.string())
+        .default([])
+        .describe("Strings that MUST NOT exist in either source or live output"),
+    },
+    async ({ route_manifest, source_content, expected_strings, forbidden_strings }) => {
+      // Step 1: Check source
+      const sourceChecks = checkStrings(source_content, expected_strings, forbidden_strings);
+
+      // Step 2: Fetch live with cache-busting
+      let liveBody: string;
+      let liveStatus: number;
+      let liveCacheVerdict: string;
+
+      try {
+        const separator = route_manifest.live_url.includes("?") ? "&" : "?";
+        const liveUrl = `${route_manifest.live_url}${separator}_ocrcl=${Date.now()}`;
+
+        const res = await fetch(liveUrl, {
+          headers: {
+            "User-Agent": "OpenClaw-Fortress/1.0 (State Reconciler)",
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Pragma": "no-cache",
+            Accept: "text/html,application/json,*/*",
+          },
+          redirect: "follow",
+        });
+
+        liveBody = await res.text();
+        liveStatus = res.status;
+
+        const headers: Record<string, string> = {};
+        res.headers.forEach((v, k) => { headers[k.toLowerCase()] = v; });
+        liveCacheVerdict = assessCacheVerdict(headers);
+      } catch (err: any) {
+        return {
+          content: [{
+            type: "text" as const,
+            text: `## OpenClaw Fortress — Deployment State Reconciliation\n\n` +
+              `**Status: DIVERGED**\n\n` +
+              `Failed to fetch live URL \`${route_manifest.live_url}\`: ${err.message}\n\n` +
+              `Source state: ${sourceChecks.passed ? "PASS" : "FAIL"}\n` +
+              `Live state: UNREACHABLE\n\n` +
+              `> Investigate DNS, routing, or Worker deployment status.`,
+          }],
+          isError: true,
+        };
+      }
+
+      // Step 3: Check live
+      const liveChecks = checkStrings(liveBody, expected_strings, forbidden_strings);
+
+      // Step 4: Reconcile
+      const sourceState = sourceChecks.passed ? "PASS" as const : "FAIL" as const;
+      const liveState = liveChecks.passed ? "PASS" as const : "FAIL" as const;
+
+      let status: ReconcileStatus;
+      let mismatchReason: string;
+
+      if (sourceChecks.passed && liveChecks.passed) {
+        status = "SYNCED";
+        mismatchReason = "";
+      } else if (sourceChecks.passed && !liveChecks.passed) {
+        status = "DIVERGED";
+        const missingExpected = liveChecks.expected_present.filter((r) => !r.found).map((r) => r.str);
+        const foundForbidden = liveChecks.forbidden_absent.filter((r) => r.found).map((r) => r.str);
+        const reasons: string[] = [];
+        if (missingExpected.length) reasons.push(`Live is missing expected strings: ${missingExpected.map(s => `"${s}"`).join(", ")}`);
+        if (foundForbidden.length) reasons.push(`Live contains forbidden strings: ${foundForbidden.map(s => `"${s}"`).join(", ")}`);
+        mismatchReason = `Source passes but live fails. ${reasons.join(". ")}. The deployment is stale — the latest source has not propagated to the live endpoint. Check the build pipeline and edge cache.`;
+      } else if (!sourceChecks.passed && liveChecks.passed) {
+        status = "DIVERGED";
+        mismatchReason = "Live passes but source fails. The source file may have regressed or the live version is running an older, correct build. Verify the source file is the intended version.";
+      } else {
+        status = "DIVERGED";
+        mismatchReason = "Both source and live fail the string checks. The expected content may never have been added, or the wrong file/URL was provided.";
+      }
+
+      const result: ReconcileResult = {
+        status,
+        source_state: sourceState,
+        live_state: liveState,
+        live_http_status: liveStatus,
+        live_cache_verdict: liveCacheVerdict,
+        source_checks: sourceChecks,
+        live_checks: liveChecks,
+        mismatch_reason: mismatchReason,
+      };
+
+      const report = formatReconcileReport(result, route_manifest);
+
+      return {
+        content: [{ type: "text" as const, text: report }],
+        isError: status === "DIVERGED",
       };
     }
   );
