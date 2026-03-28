@@ -6,11 +6,9 @@ import { sendProWelcomeEmail } from "./email.js";
 // Update these when you create new prices in Stripe.
 // Unmapped price IDs default to PRO.
 const PRICE_TO_TIER: Record<string, "PRO" | "TEAM" | "ENTERPRISE"> = {
-  // Enterprise (existing)
+  "price_1TG2fUR7Vg1dZJSLFR8xrKao": "PRO",
+  "price_1TG2fVR7Vg1dZJSLnY8WMFNU": "TEAM",
   "price_1TG19DJ8qAPoi4y2q08hGQzo": "ENTERPRISE",
-  // Placeholders — replace with real Stripe Price IDs when created:
-  // "price_team_placeholder": "TEAM",
-  // "price_pro_placeholder": "PRO",
 };
 
 export interface StripeEnv {
