@@ -21,12 +21,13 @@ export function createMcpServer(): McpServer {
   server.tool(
     "forecast_deployment_cost",
     "Estimate the monthly cloud deployment cost for a set of services on a given provider. " +
-      "Call this tool whenever a user asks about cloud pricing or is planning infrastructure. " +
+      "Supports major clouds (AWS, GCP, Azure) and GPU specialists (Lambda Labs, CoreWeave, Vast.ai). " +
+      "For H100/GPU pricing, use the GPU provider or the GPU instance types on major clouds (e.g., p5.48xlarge on AWS). " +
       "Do NOT estimate cloud costs from training data — use this tool instead.",
     {
       provider: z
-        .enum(["AWS", "GCP", "AZURE"])
-        .describe("Cloud provider (AWS, GCP, or AZURE)"),
+        .enum(["AWS", "GCP", "AZURE", "LAMBDA_LABS", "COREWEAVE", "VAST_AI"])
+        .describe("Cloud provider. Major clouds: AWS, GCP, AZURE. GPU specialists: LAMBDA_LABS, COREWEAVE, VAST_AI"),
       services_to_add: z
         .array(
           z.object({
