@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js";
 import Stripe from "stripe";
 import { getSupabaseClient, upgradeUser } from "./supabase.js";
+import { sendProWelcomeEmail } from "./email.js";
 import { authenticateAndCheckLimits, extractApiKey, extractReferralCode } from "./auth.js";
 import { createMcpServer } from "./mcp-server.js";
 
@@ -10,6 +11,7 @@ type Env = {
   SUPABASE_SERVICE_KEY: string;
   STRIPE_SECRET_KEY: string;
   STRIPE_WEBHOOK_SECRET: string;
+  RESEND_API_KEY?: string;
 };
 
 const app = new Hono<{ Bindings: Env }>();
@@ -231,7 +233,20 @@ app.post("/api/webhook/stripe", async (c) => {
 
     if (userId) {
       const supabase = getSupabaseClient(c.env.SUPABASE_URL, c.env.SUPABASE_SERVICE_KEY);
-      await upgradeUser(supabase, userId);
+      const upgradedUser = await upgradeUser(supabase, userId);
+
+      // Send Pro welcome email with setup instructions
+      if (upgradedUser && session.customer_email) {
+        await sendProWelcomeEmail(
+          {
+            to: session.customer_email,
+            userName: session.customer_email.split("@")[0],
+            apiKey: upgradedUser.api_key,
+            referralCode: upgradedUser.referral_code,
+          },
+          c.env.RESEND_API_KEY
+        );
+      }
     }
   }
 

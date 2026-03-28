@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Welcome to Pro — OpenClaw FinOps</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif;
+      background: #fafafa;
+      color: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 12px;
+      max-width: 560px;
+      width: 100%;
+      margin: 24px;
+      padding: 48px 40px;
+    }
+    .badge {
+      display: inline-block;
+      background: #0a0a0a;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 16px;
+    }
+    h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+    .subtitle { color: #666; font-size: 16px; margin-bottom: 32px; }
+    .key-section { margin-bottom: 32px; }
+    .key-label {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+    .key-box {
+      display: flex;
+      align-items: center;
+      background: #f5f5f5;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 14px 16px;
+      gap: 12px;
+    }
+    .key-value {
+      flex: 1;
+      font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+      font-size: 14px;
+      word-break: break-all;
+      color: #333;
+    }
+    .copy-btn {
+      background: #0a0a0a;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s;
+    }
+    .copy-btn:hover { background: #333; }
+    .copy-btn.copied { background: #16a34a; }
+    .steps { margin-bottom: 32px; }
+    .steps h2 { font-size: 18px; margin-bottom: 16px; }
+    .step {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 14px;
+      align-items: flex-start;
+    }
+    .step-num {
+      background: #f0f0f0;
+      color: #333;
+      font-size: 13px;
+      font-weight: 700;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-text { font-size: 15px; line-height: 1.5; padding-top: 3px; }
+    .step-text code {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+    .video-placeholder {
+      background: #f5f5f5;
+      border: 2px dashed #ddd;
+      border-radius: 8px;
+      padding: 40px;
+      text-align: center;
+      color: #999;
+      margin-bottom: 32px;
+    }
+    .video-placeholder span { font-size: 36px; display: block; margin-bottom: 8px; }
+    .referral {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .referral h3 { font-size: 15px; margin-bottom: 6px; }
+    .referral p { font-size: 14px; color: #555; line-height: 1.5; }
+    .referral code { background: #e5e7eb; padding: 2px 6px; border-radius: 4px; font-weight: 600; }
+    .footer {
+      margin-top: 32px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e5e5;
+      text-align: center;
+      color: #999;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="badge">Pro Tier Active</div>
+  <h1>You're all set.</h1>
+  <p class="subtitle">Unlimited cloud cost forecasts. Verified pricing. Zero hallucinations.</p>
+
+  <div class="key-section">
+    <div class="key-label">Your Pro API Key</div>
+    <div class="key-box">
+      <span class="key-value" id="apiKey">pro_key_will_appear_here</span>
+      <button class="copy-btn" id="copyBtn" onclick="copyKey()">Copy</button>
+    </div>
+  </div>
+
+  <div class="steps">
+    <h2>Get started</h2>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-text">Copy your API key above.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-text">Open your MCP config file:<br>
+        <strong>Claude Desktop:</strong> <code>claude_desktop_config.json</code><br>
+        <strong>Cursor:</strong> Settings &rarr; Models &rarr; MCP &rarr; Add Server
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-text">Replace <code>YOUR_API_KEY</code> with your Pro key. Done.</div>
+    </div>
+  </div>
+
+  <div class="video-placeholder">
+    <span>&#9654;</span>
+    How to add OpenClaw FinOps to Cursor (60s)
+  </div>
+
+  <div class="referral">
+    <h3>Share &amp; earn</h3>
+    <p>Your referral code: <code id="referralCode">loading...</code><br>
+    When a friend uses it, you both get +5 free operations.</p>
+  </div>
+
+  <div class="footer">
+    OpenClaw FinOps &mdash; Verified cloud pricing for AI agents.
+  </div>
+</div>
+
+<script>
+  // Populate from URL params (set by Stripe success_url redirect)
+  const params = new URLSearchParams(window.location.search);
+  const key = params.get('key');
+  const ref = params.get('ref');
+  if (key) document.getElementById('apiKey').textContent = key;
+  if (ref) document.getElementById('referralCode').textContent = ref;
+
+  function copyKey() {
+    const key = document.getElementById('apiKey').textContent;
+    navigator.clipboard.writeText(key).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = 'Copied';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -93,12 +93,37 @@ export async function incrementUsage(
   }
 }
 
+export async function getUserById(
+  supabase: SupabaseClient,
+  userId: string
+): Promise<UserRecord | null> {
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("user_id", userId)
+    .single();
+
+  if (error || !data) return null;
+  return data as UserRecord;
+}
+
 export async function upgradeUser(
   supabase: SupabaseClient,
   userId: string
-): Promise<void> {
+): Promise<UserRecord | null> {
   await supabase
     .from("users")
     .update({ tier: "PRO", monthly_usage_count: 0 })
     .eq("user_id", userId);
+
+  // Log the upgrade event
+  await supabase.from("upgrade_events").insert({
+    user_id: userId,
+    upgraded_at: new Date().toISOString(),
+    source: "stripe_checkout",
+  }).then(() => {}, () => {
+    // Table may not exist yet — non-fatal
+  });
+
+  return getUserById(supabase, userId);
 }
