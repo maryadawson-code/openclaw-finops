@@ -14,6 +14,8 @@
     "dev:fortress": "pnpm --filter @openclaw/fortress dev",
     "deploy:fortress": "pnpm --filter @openclaw/fortress deploy",
     "deploy:guardrail": "pnpm --filter @openclaw/guardrail deploy",
+    "dev:ambassador": "pnpm --filter @openclaw/ambassador dev",
+    "deploy:ambassador": "pnpm --filter @openclaw/ambassador deploy",
     "deploy:all": "pnpm -r deploy",
     "typecheck": "pnpm -r typecheck"
   },
