@@ -1,5 +1,4 @@
-# Smithery.ai configuration for OpenClaw FinOps
-# Zero-install remote MCP server
+# Smithery.ai configuration for OpenClaw Integrity Suite
 
 startCommand:
   type: remote
@@ -9,18 +8,29 @@ startCommand:
     x-api-key: "${API_KEY}"
 
 name: openclaw-finops
-display_name: OpenClaw FinOps
+display_name: "OpenClaw Integrity Suite — FinOps + Security + API Verification"
 description: >
-  Cloud deployment cost forecasting for AI agents. Returns verified,
-  line-item pricing for AWS, GCP, and Azure directly inside agent
-  conversations. Free tier includes 25 operations/month.
-
-icon: https://openclaw-finops.marywomack.workers.dev/icon.png
+  Stop AI agents from hallucinating cloud costs, fabricating API endpoints, and
+  generating insecure Terraform. Four MCP servers solving the top four problems
+  hitting vibe coders. Free tier: 25 ops/month.
 
 categories:
   - DevOps
   - FinOps
   - Cloud
+  - Security
+  - AI Agents
+
+tags:
+  - mcp-server
+  - cloud-pricing
+  - finops
+  - terraform
+  - security-scanning
+  - vibe-coding
+  - aws
+  - gcp
+  - azure
 
 configSchema:
   type: object
@@ -30,4 +40,4 @@ configSchema:
     API_KEY:
       type: string
       title: API Key
-      description: Your OpenClaw FinOps API key. Get one free at https://billing.openclaw.com
+      description: Your OpenClaw API key. Get one free — 25 ops/month, no credit card.

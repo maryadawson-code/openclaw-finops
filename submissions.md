@@ -1,122 +1,83 @@
-# OpenClaw FinOps — Registry Submissions Guide
+# OpenClaw Integrity Suite — Registry & Store Submissions Guide
 
-## Smithery.ai
+**Goal:** Get listed in every MCP registry, AI tool store, and developer marketplace.
 
-**Status:** Ready to submit. `smithery.yaml` is in the repo root.
+## MCP Registries (Submit First)
 
-**Steps:**
-1. Go to https://smithery.ai/submit
-2. Enter the GitHub repo URL: `https://github.com/maryadawson-code/openclaw-finops`
-3. Smithery will auto-detect `smithery.yaml` and pull the config
-4. Verify the listing preview, then publish
+### 1. Smithery.ai
+- Config ready: `smithery.yaml`
+- Submit: https://smithery.ai/submit or `npx @smithery/cli publish openclaw-finops`
 
-**Alternative (CLI):**
-```bash
-npx @smithery/cli publish openclaw-finops
-```
+### 2. Glama.ai
+- Config ready: `mcp-server.json`
+- Submit: https://glama.ai/mcp/servers/submit with repo URL
 
----
+### 3. MCP.so
+- Submit: https://mcp.so/submit (Category: DevOps/FinOps)
 
-## Glama.ai
+### 4. PulseMCP
+- Submit server URL: https://pulsemcp.com/submit
+- Auto-populates from `/.well-known/mcp`
 
-**Steps:**
-1. Go to https://glama.ai/mcp/servers/submit
-2. Paste the GitHub repo URL: `https://github.com/maryadawson-code/openclaw-finops`
-3. Glama reads `mcp-server.json` from the repo root for metadata
-4. Add description: "Cloud deployment cost forecasting for AI agents. Verified pricing for AWS, GCP, and Azure. Revenue-gated with a 25 op/month free tier."
+### 5. mcp.run
+- Submit as remote MCP server
 
----
+### 6. mcpservers.org
+- Submit GitHub repo URL
 
-## PulseMCP
+## AI Platform Stores
 
-**Steps:**
-1. Go to https://pulsemcp.com/submit
-2. Submit the server URL: `https://openclaw-finops.marywomack.workers.dev/mcp`
-3. PulseMCP will crawl `/.well-known/mcp` to auto-populate metadata
+### 7. Anthropic Skills
+- Fork anthropics/skills, copy skills/ directories, open PR
 
----
+### 8. Microsoft Copilot
+- Package copilot/ configs as Teams app
 
-## MCP.so (Community Directory)
+### 9. VS Code Marketplace
+- Create extension that pre-configures OpenClaw MCP servers
 
-**Steps:**
-1. Go to https://mcp.so/submit
-2. Fill in:
-   - Name: OpenClaw FinOps
-   - URL: https://openclaw-finops.marywomack.workers.dev/mcp
-   - GitHub: https://github.com/maryadawson-code/openclaw-finops
-   - Category: DevOps / FinOps
-   - Transport: Streamable HTTP (remote)
-   - Auth: API Key
+### 10. JetBrains Marketplace
+- Create plugin for AI Assistant MCP config
 
----
+## Developer Directories
 
-## Anthropic Skills Repository
+### 11. FinOps Foundation Landscape
+### 12. CNCF Landscape
+### 13. Product Hunt
+### 14. Awesome MCP Lists
+### 15. GitHub Topics
 
-**Status:** Ready to submit. `skills/openclaw-finops/SKILL.md` follows the template format.
+## Checklist
 
-**Steps:**
-1. Fork https://github.com/anthropics/skills
-2. Copy the `skills/openclaw-finops/` directory from this repo into the fork's `skills/` directory
-3. Open a PR with title: "Add openclaw-finops: Cloud cost forecasting via MCP"
-4. PR description should highlight:
-   - Revenue Gate pattern (`isError: true` paywall as a security/business best practice)
-   - Prevents LLM cost hallucinations by grounding pricing in a verified matrix
-   - Remote MCP server — zero local dependencies
+### Registries
+- [ ] Smithery.ai
+- [ ] Glama.ai
+- [ ] MCP.so
+- [ ] PulseMCP
+- [ ] mcp.run
+- [ ] mcpservers.org
 
----
+### Stores
+- [ ] Anthropic Skills
+- [ ] Microsoft Copilot
+- [ ] VS Code Marketplace
+- [ ] JetBrains Marketplace
 
-## AAIF (Agentic AI Foundation)
+### Directories
+- [ ] GitHub Topics
+- [ ] FinOps Foundation
+- [ ] CNCF Landscape
+- [ ] Product Hunt
+- [ ] Awesome MCP lists
 
-**Context:** AAIF is a Linux Foundation directed fund co-founded by Anthropic, Block, and OpenAI.
-MCP is a founding project. As AAIF matures its registry/catalog processes, OpenClaw FinOps
-is positioned for inclusion as a reference implementation of revenue-gated MCP.
+### Launch
+- [ ] Hacker News (Tue/Wed 9-10am EST)
+- [ ] X/Twitter thread
+- [ ] LinkedIn post
+- [ ] Reddit (r/MCP, r/devops, r/aws, r/vibecoding)
+- [ ] Discord (Anthropic, Cursor, Cloudflare)
+- [ ] Dev.to/Hashnode article
 
-**Current action:** No formal submission portal exists yet. Monitor:
-- https://aaif.io/ for registry announcements
-- https://github.com/modelcontextprotocol/ for catalog PRs
-
-**Preparation complete:**
-- `/.well-known/ai` follows IETF draft-aiendpoint-ai-discovery-00 (AAIF-aligned)
-- `/.well-known/mcp` follows SEP-1960 proposal conventions
-- `/.well-known/agent.json` follows Google A2A spec
-- `smithery.yaml` ready for Smithery (AAIF member: Anthropic)
-- Revenue Gate pattern documented as a reusable standard in SKILL.md
-
----
-
-## Microsoft 365 Copilot
-
-**Status:** `copilot/declarativeAgent.json` and `copilot/openclaw-finops-plugin.json` ready.
-
-**Steps:**
-1. The declarative agent manifest requires wrapping the MCP endpoint behind an OpenAPI spec
-   (Copilot doesn't speak MCP natively — it uses API plugin manifests)
-2. Create an `openapi.yaml` describing the REST interface to `forecast_deployment_cost`
-3. Package as a Teams app: `manifest.json` + `declarativeAgent.json` + plugin + OpenAPI spec
-4. Submit via Microsoft Partner Center or Teams Developer Portal
-
-**Note:** When Microsoft adds native MCP support to Copilot (tracked in schema v1.5+ with
-`actions` extensibility), the `/.well-known/mcp` endpoint will handle discovery directly.
-
----
-
-## GitHub Topics (already applied)
-
-The repo has these topics for GitHub search discoverability:
-`mcp-server` `mcp` `model-context-protocol` `agentic-ai` `finops`
-`cloud-pricing` `cloudflare-workers` `ai-agents` `llm-tools` `devops`
-
----
-
-## Submission Checklist
-
-- [ ] Smithery.ai — submit via web or CLI
-- [ ] Glama.ai — submit GitHub URL
-- [ ] PulseMCP — submit server URL
-- [ ] MCP.so — submit listing
-- [ ] Hacker News — post from LAUNCH_POSTS.md
-- [ ] X/Twitter — post thread from LAUNCH_POSTS.md
-- [ ] LinkedIn — post from LAUNCH_POSTS.md
-- [ ] Anthropic Skills — fork repo, copy skills/openclaw-finops/, open PR
-- [ ] Microsoft Copilot — package declarativeAgent.json as Teams app (requires OpenAPI wrapper)
-- [ ] AAIF — monitor for registry launch, submit when portal opens
+### Monitoring
+- [ ] AAIF — submit when portal opens
+- [ ] Microsoft native MCP — activate when supported
