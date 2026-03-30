@@ -181,7 +181,7 @@ When a user upgrades via the billing link, Stripe fires a `checkout.session.comp
 ## Self-Hosting
 
 ```bash
-git clone https://github.com/yourusername/openclaw-finops.git
+git clone https://github.com/maryadawson-code/openclaw-finops.git
 cd openclaw-finops
 npm install
 
