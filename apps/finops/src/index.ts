@@ -10,6 +10,7 @@ import {
 import { createMcpServer } from "./mcp-server.js";
 import { LLMS_TXT, LLMS_FULL_TXT } from "./llms-txt.js";
 import { DEMO_HTML } from "./demo-html.js";
+import { trackEvent, hashIP, getHeroVariant, getShareOrder, optimizeWeights } from "./growth-engine.js";
 
 type Env = {
   SUPABASE_URL: string;
@@ -153,6 +154,33 @@ footer{text-align:center;color:#666;font-size:.85rem;margin-top:48px;padding-top
 </form>
 </div>
 
+<script>
+// Growth tracking + A/B testing
+(function(){
+  var v='';
+  fetch('/g/config').then(r=>r.json()).then(function(c){
+    v=c.variant.id;
+    var h=document.querySelector('h1');
+    var p=document.querySelector('.tagline');
+    if(h)h.textContent='OpenClaw FinOps';
+    if(h)h.innerHTML=c.variant.headline;
+    if(p)p.textContent=c.variant.sub;
+    fetch('/g/event',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:'page_view',page:'/',variant:v})});
+  }).catch(function(){
+    fetch('/g/event',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:'page_view',page:'/'})});
+  });
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('a');
+    if(!a)return;
+    var h=a.href||'';
+    if(h.includes('twitter.com/intent'))fetch('/g/event',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:'share_click',channel:'x',page:'/',variant:v})});
+    else if(h.includes('linkedin.com/sharing'))fetch('/g/event',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:'share_click',channel:'linkedin',page:'/',variant:v})});
+    else if(h.includes('reddit.com/submit'))fetch('/g/event',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:'share_click',channel:'reddit',page:'/',variant:v})});
+    else if(h.includes('/try'))fetch('/g/event',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:'try_click',page:'/',variant:v})});
+    else if(h.includes('github.com'))fetch('/g/event',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:'github_click',page:'/',variant:v})});
+  });
+})();
+</script>
 <footer>
 <p>OpenClaw FinOps — MIT Licensed. Built by <a href="https://missionmeetstech.com">Mission Meets Tech</a>.</p>
 <p style="margin-top:8px"><a href="/.well-known/mcp">MCP Discovery</a> · <a href="/llms.txt">llms.txt</a> · <a href="/.well-known/agent.json">Agent Card</a> · <a href="/demo">Demo</a></p>
@@ -291,6 +319,74 @@ app.post("/try", async (c) => {
   } catch (e: any) {
     return c.json({ error: e.message || "Invalid request" }, 400);
   }
+});
+
+// ---------------------------------------------------------------------------
+// Growth: Event tracking endpoint (called by frontend JS)
+// ---------------------------------------------------------------------------
+app.post("/g/event", async (c) => {
+  const supabase = getSupabaseClient(c.env.SUPABASE_URL, c.env.SUPABASE_SERVICE_KEY);
+  try {
+    const { event, page, channel, variant, metadata } = await c.req.json();
+    const ip = c.req.header("cf-connecting-ip") || c.req.header("x-forwarded-for") || "unknown";
+    await trackEvent(supabase, event, { page, channel, variant, metadata, ipHash: hashIP(ip) });
+    return c.json({ ok: true });
+  } catch {
+    return c.json({ ok: false }, 400);
+  }
+});
+
+// ---------------------------------------------------------------------------
+// Growth: Get current A/B config (called by landing page on load)
+// ---------------------------------------------------------------------------
+app.get("/g/config", async (c) => {
+  const supabase = getSupabaseClient(c.env.SUPABASE_URL, c.env.SUPABASE_SERVICE_KEY);
+  const variant = await getHeroVariant(supabase);
+  const shareOrder = await getShareOrder(supabase);
+  return c.json({ variant, shareOrder });
+});
+
+// ---------------------------------------------------------------------------
+// Growth: Self-optimization endpoint (run hourly via cron or manually)
+// ---------------------------------------------------------------------------
+app.post("/g/optimize", async (c) => {
+  const supabase = getSupabaseClient(c.env.SUPABASE_URL, c.env.SUPABASE_SERVICE_KEY);
+  const apiKey = c.req.header("x-api-key");
+  // Only allow optimization from admin key
+  if (apiKey !== "op_live_305ebf777bfc29250dce93f0f43590bb") {
+    return c.json({ error: "unauthorized" }, 401);
+  }
+  const result = await optimizeWeights(supabase);
+  return c.json(result);
+});
+
+// ---------------------------------------------------------------------------
+// Growth: Analytics dashboard (admin only)
+// ---------------------------------------------------------------------------
+app.get("/g/dashboard", async (c) => {
+  const supabase = getSupabaseClient(c.env.SUPABASE_URL, c.env.SUPABASE_SERVICE_KEY);
+  const apiKey = c.req.header("x-api-key") || new URL(c.req.url).searchParams.get("key");
+  if (apiKey !== "op_live_305ebf777bfc29250dce93f0f43590bb") {
+    return c.json({ error: "unauthorized" }, 401);
+  }
+
+  const since24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+  const since7d = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+
+  const [views24, views7d, shares, tries, config] = await Promise.all([
+    supabase.from("growth_analytics").select("event,page,variant", { count: "exact" }).gte("created_at", since24h),
+    supabase.from("growth_analytics").select("event,page,channel,variant", { count: "exact" }).gte("created_at", since7d),
+    supabase.from("growth_analytics").select("channel").eq("event", "share_click").gte("created_at", since7d),
+    supabase.from("growth_analytics").select("variant").eq("event", "try_forecast").gte("created_at", since7d),
+    supabase.from("growth_config").select("*"),
+  ]);
+
+  return c.json({
+    period: { last24h: views24.count, last7d: views7d.count },
+    shares: shares.data,
+    tries: tries.data,
+    config: config.data,
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -608,4 +704,14 @@ app.post("/api/webhook/stripe", async (c) => {
   return c.json({ received: true });
 });
 
-export default app;
+// ---------------------------------------------------------------------------
+// Scheduled: Hourly growth optimization (Cloudflare Cron Trigger)
+// ---------------------------------------------------------------------------
+export default {
+  fetch: app.fetch,
+  async scheduled(event: ScheduledEvent, env: Env) {
+    const supabase = getSupabaseClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_KEY);
+    const result = await optimizeWeights(supabase);
+    console.log("[GROWTH] Hourly optimization:", JSON.stringify(result));
+  },
+};

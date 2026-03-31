@@ -10,3 +10,7 @@ compatibility_flags = ["nodejs_compat"]
 #   STRIPE_SECRET_KEY
 #   STRIPE_WEBHOOK_SECRET
 #   RESEND_API_KEY (optional)
+
+# Cron trigger: run growth optimization every hour
+[triggers]
+crons = ["0 * * * *"]
