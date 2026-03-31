@@ -1,0 +1,117 @@
+export const DEMO_HTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OpenClaw FinOps — Demo</title>
+<meta property="og:title" content="OpenClaw FinOps — $15 vs $204: Why AI agents need verified pricing">
+<meta property="og:description" content="Watch an AI agent get a 6.4x more accurate cloud cost forecast with OpenClaw FinOps.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://openclaw-finops.marywomack.workers.dev/demo">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#1e1e2e;font-family:'SF Mono',Monaco,'Cascadia Code',monospace;overflow:hidden}
+.screen{width:900px;height:580px;margin:40px auto;border-radius:16px;overflow:hidden;box-shadow:0 20px 80px rgba(0,0,0,.6);position:relative}
+.titlebar{background:#181825;height:36px;display:flex;align-items:center;padding:0 16px;gap:8px}
+.dot{width:12px;height:12px;border-radius:50%}
+.dot.r{background:#f38ba8}.dot.y{background:#f9e2af}.dot.g{background:#a6e3a1}
+.titlebar-text{color:#6c7086;font-size:12px;margin-left:auto;margin-right:auto}
+.chat{background:#1e1e2e;height:544px;padding:24px 32px;overflow:hidden;position:relative}
+.msg{opacity:0;transform:translateY(12px);margin-bottom:16px;transition:none}
+.msg.show{opacity:1;transform:translateY(0)}
+.user-msg{display:flex;justify-content:flex-end}
+.user-bubble{background:#45475a;color:#cdd6f4;padding:12px 18px;border-radius:18px 18px 4px 18px;max-width:520px;font-size:14px;line-height:1.5}
+.bot-msg{display:flex;justify-content:flex-start;gap:10px}
+.avatar{width:28px;height:28px;background:linear-gradient(135deg,#f97316,#ea580c);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#000;flex-shrink:0;margin-top:2px}
+.bot-bubble{background:#181825;border:1px solid #313244;color:#cdd6f4;padding:16px 20px;border-radius:4px 18px 18px 18px;max-width:600px;font-size:13px;line-height:1.6}
+.typing{display:flex;gap:4px;padding:8px 0}
+.typing span{width:7px;height:7px;background:#6c7086;border-radius:50%;animation:blink 1.4s infinite both}
+.typing span:nth-child(2){animation-delay:.2s}
+.typing span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.3}40%{opacity:1}}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:12px}
+th{text-align:left;padding:6px 10px;border-bottom:2px solid #f97316;color:#f97316;font-weight:600}
+td{padding:6px 10px;border-bottom:1px solid #313244;color:#cdd6f4}
+tr:last-child td{border-bottom:none}
+.total{color:#f97316;font-weight:700;font-size:14px}
+.tool-call{background:#1a1a2e;border:1px solid #f9731640;border-radius:8px;padding:10px 14px;margin:8px 0;font-size:11px;color:#f97316}
+.tool-call .label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#f9731680;margin-bottom:4px}
+.badge{display:inline-block;background:#f9731620;color:#f97316;font-size:10px;font-weight:600;padding:2px 8px;border-radius:9999px;margin-left:8px}
+.hallucination{color:#f38ba8;text-decoration:line-through;opacity:.7}
+.correct{color:#a6e3a1;font-weight:700}
+.watermark{position:absolute;bottom:16px;right:24px;color:#45475a;font-size:11px;letter-spacing:.5px}
+.progress{position:absolute;bottom:0;left:0;height:3px;background:#f97316;width:0%;transition:width .3s linear}
+.replay-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#f97316;color:#000;font-weight:700;padding:16px 36px;border-radius:9999px;border:none;font-size:16px;cursor:pointer;opacity:0;transition:opacity .3s;z-index:10}
+.replay-btn.show{opacity:1}
+.replay-btn:hover{background:#ea580c}
+</style>
+</head>
+<body>
+<div class="screen" id="screen">
+  <div class="titlebar">
+    <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+    <span class="titlebar-text">Claude Desktop — openclaw-finops</span>
+  </div>
+  <div class="chat" id="chat">
+    <div class="msg" id="m1">
+      <div class="user-msg">
+        <div class="user-bubble">What would it cost to run our API on AWS with an m5.large, managed Postgres, and Redis?</div>
+      </div>
+    </div>
+    <div class="msg" id="m2">
+      <div class="bot-msg">
+        <div class="avatar">O</div>
+        <div class="bot-bubble"><div class="typing"><span></span><span></span><span></span></div></div>
+      </div>
+    </div>
+    <div class="msg" id="m3">
+      <div class="bot-msg">
+        <div class="avatar">O</div>
+        <div class="bot-bubble">
+          <div class="tool-call"><div class="label">Tool Call</div>forecast_deployment_cost<span class="badge">openclaw-finops</span></div>
+          <div style="color:#6c7086;font-size:12px;margin-top:6px">Fetching verified pricing from the OpenClaw matrix...</div>
+        </div>
+      </div>
+    </div>
+    <div class="msg" id="m4">
+      <div class="bot-msg">
+        <div class="avatar">O</div>
+        <div class="bot-bubble">
+          <div style="margin-bottom:10px;font-size:12px;color:#a6adc8">Without OpenClaw, I would have estimated: <span class="hallucination">~$45/month</span></div>
+          <div style="margin-bottom:6px;font-size:12px;color:#a6adc8">With verified pricing:</div>
+          <table>
+            <tr><th>Service</th><th>Category</th><th>Hours</th><th>Est. Cost</th></tr>
+            <tr id="r1" style="opacity:0"><td>m5.large</td><td>Compute</td><td>730</td><td>$70.08</td></tr>
+            <tr id="r2" style="opacity:0"><td>rds.postgres.db.m5.large</td><td>Database</td><td>730</td><td>$204.40</td></tr>
+            <tr id="r3" style="opacity:0"><td>elasticache.redis.t3.micro</td><td>Cache</td><td>730</td><td>$11.68</td></tr>
+          </table>
+          <div class="total" id="total" style="opacity:0">Total: $286.16/mo <span style="font-size:11px;color:#f38ba8;font-weight:400">\u2014 6.4x more than the LLM estimate</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="msg" id="m5">
+      <div class="bot-msg">
+        <div class="avatar">O</div>
+        <div class="bot-bubble" style="font-size:13px">
+          That <span class="correct">$286.16</span> is the real cost \u2014 not <span class="hallucination">$45</span>. OpenClaw FinOps catches these hallucinations before they become invoices.<br><br>
+          <span style="color:#f97316">Free tier: 25 forecasts/month. No credit card.</span><br>
+          <span style="color:#6c7086;font-size:12px">github.com/maryadawson-code/openclaw-finops</span>
+        </div>
+      </div>
+    </div>
+    <div class="watermark">openclaw-finops.marywomack.workers.dev</div>
+    <div class="progress" id="progress"></div>
+  </div>
+  <button class="replay-btn" id="replay" onclick="runDemo()">Replay</button>
+</div>
+<script>
+const TIMELINE=[{id:'m1',delay:800,type:'show'},{id:'m2',delay:1200,type:'show'},{id:'m2',delay:2000,type:'hide'},{id:'m3',delay:200,type:'show'},{id:'m4',delay:2200,type:'show'},{id:'r1',delay:400,type:'fade'},{id:'r2',delay:500,type:'fade'},{id:'r3',delay:500,type:'fade'},{id:'total',delay:600,type:'fade'},{id:'m5',delay:1800,type:'show'}];
+const TOTAL_DURATION=TIMELINE.reduce((s,t)=>s+t.delay,0);
+function reset(){document.querySelectorAll('.msg').forEach(m=>{m.classList.remove('show');m.style.transition='none'});['r1','r2','r3','total'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.opacity='0'});document.getElementById('progress').style.width='0%';document.getElementById('replay').classList.remove('show')}
+async function runDemo(){reset();await sleep(300);let elapsed=0;for(const step of TIMELINE){await sleep(step.delay);elapsed+=step.delay;const el=document.getElementById(step.id);if(!el)continue;if(step.type==='show'){el.style.transition='opacity .4s ease, transform .4s ease';el.classList.add('show')}else if(step.type==='hide'){el.style.transition='opacity .3s ease';el.classList.remove('show')}else if(step.type==='fade'){el.style.transition='opacity .4s ease';el.style.opacity='1'}document.getElementById('progress').style.width=(elapsed/TOTAL_DURATION*100)+'%'}document.getElementById('progress').style.width='100%';await sleep(3000);document.getElementById('replay').classList.add('show')}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+window.addEventListener('load',()=>setTimeout(runDemo,500));
+</script>
+</body>
+</html>`;

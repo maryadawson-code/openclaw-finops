@@ -9,6 +9,7 @@ import {
 } from "@openclaw/core";
 import { createMcpServer } from "./mcp-server.js";
 import { LLMS_TXT, LLMS_FULL_TXT } from "./llms-txt.js";
+import { DEMO_HTML } from "./demo-html.js";
 
 type Env = {
   SUPABASE_URL: string;
@@ -139,6 +140,11 @@ footer{text-align:center;color:#666;font-size:.85rem;margin-top:48px;padding-top
 // Health check (JSON)
 // ---------------------------------------------------------------------------
 app.get("/health", (c) => c.json({ status: "ok", service: "openclaw-finops", suite: "openclaw" }));
+
+// ---------------------------------------------------------------------------
+// /demo — Animated product demo (shareable, auto-plays)
+// ---------------------------------------------------------------------------
+app.get("/demo", (c) => c.html(DEMO_HTML));
 
 // ---------------------------------------------------------------------------
 // /try — Zero-friction demo (no API key, rate-limited to 3/IP/day)
