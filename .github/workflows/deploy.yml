@@ -1,4 +1,4 @@
-name: Deploy OpenClaw Suite
+name: Deploy IntegrityPulse Suite
 
 on:
   push:

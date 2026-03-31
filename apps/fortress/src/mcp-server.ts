@@ -5,7 +5,7 @@ import {
   getCanonicalAsset,
   getRouteManifest,
   getForbiddenPatterns,
-} from "@openclaw/core";
+} from "@integritypulse/core";
 
 // Headers that reveal cache vs origin behavior
 const CACHE_HEADERS = [
@@ -110,7 +110,7 @@ function checkDomSignature(html: string, signature: string): { match: boolean; d
 }
 
 function formatReport(result: VerificationResult): string {
-  let report = `## OpenClaw Fortress — Live State Verification\n\n`;
+  let report = `## IntegrityPulse Fortress — Live State Verification\n\n`;
   report += `**Target:** \`${result.url}\`\n`;
   if (result.final_url !== result.url) {
     report += `**Redirected to:** \`${result.final_url}\`\n`;
@@ -211,7 +211,7 @@ function scanFilesForForbidden(
 }
 
 function formatFirewallReport(result: ReturnType<typeof scanFilesForForbidden>, fileCount: number): string {
-  let report = `## OpenClaw Fortress — Pre-Flight Firewall\n\n`;
+  let report = `## IntegrityPulse Fortress — Pre-Flight Firewall\n\n`;
   report += `**Files scanned:** ${fileCount}\n`;
   report += `**Status:** **${result.status}**\n\n`;
 
@@ -323,7 +323,7 @@ function simulateBlast(
 }
 
 function formatBlastReport(result: BlastResult): string {
-  let report = `## OpenClaw Fortress — Blast Radius Simulation\n\n`;
+  let report = `## IntegrityPulse Fortress — Blast Radius Simulation\n\n`;
   report += `**Declared change class:** ${result.declared_class}\n`;
   report += `**Status:** **${result.status}**\n\n`;
   report += `${result.explanation}\n\n`;
@@ -389,7 +389,7 @@ interface ReconcileResult {
 }
 
 function formatReconcileReport(r: ReconcileResult, manifest: { source_path: string; live_url: string }): string {
-  let report = `## OpenClaw Fortress — Deployment State Reconciliation\n\n`;
+  let report = `## IntegrityPulse Fortress — Deployment State Reconciliation\n\n`;
   report += `**Source:** \`${manifest.source_path}\`\n`;
   report += `**Live:** \`${manifest.live_url}\`\n`;
   report += `**Status:** **${r.status}**\n`;
@@ -634,7 +634,7 @@ function formatA11yReport(violations: A11yViolation[], url: string): string {
   const warnings = violations.filter((v) => v.severity === "WARNING").length;
   const status = errors > 0 ? "FAIL" : warnings > 0 ? "WARN" : "PASS";
 
-  let report = `## OpenClaw Fortress — Accessibility Scan\n\n`;
+  let report = `## IntegrityPulse Fortress — Accessibility Scan\n\n`;
   report += `**Target:** \`${url}\`\n`;
   report += `**Status:** **${status}**\n`;
   report += `**Findings:** ${violations.length} (${errors} errors, ${warnings} warnings)\n\n`;
@@ -762,11 +762,11 @@ export interface FortressEnv {
 }
 
 const TEAM_TOOL_GATE =
-  "OpenClaw Fortress Core requires a TEAM subscription ($99/mo). " +
+  "IntegrityPulse Fortress Core requires a TEAM subscription ($99/mo). " +
   "Upgrade to prevent AI deployment drift: https://billing.openclaw.com/team";
 
 const ENTERPRISE_TOOL_GATE =
-  "OpenClaw Fortress Advanced requires an ENTERPRISE subscription ($499/mo). " +
+  "IntegrityPulse Fortress Advanced requires an ENTERPRISE subscription ($499/mo). " +
   "Upgrade to unlock visual contracts, automated rollbacks, and route parity: " +
   "https://billing.openclaw.com/enterprise";
 
@@ -814,7 +814,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
     name: "openclaw-fortress",
     version: "1.0.0",
     instructions:
-      "You are connected to OpenClaw Fortress, a zero-trust verification engine. " +
+      "You are connected to IntegrityPulse Fortress, a zero-trust verification engine. " +
       "You MUST run simulate_blast_radius before executing any file writes to verify " +
       "the change scope matches the declared intent. You MUST run pre_flight_firewall " +
       "before executing any build or git commit commands to catch forbidden content. " +
@@ -875,7 +875,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
         }
 
         const headers: Record<string, string> = {
-          "User-Agent": "OpenClaw-Fortress/1.0 (Live State Verifier)",
+          "User-Agent": "IntegrityPulse-Fortress/1.0 (Live State Verifier)",
           Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         };
         if (bypass_cache) {
@@ -933,7 +933,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
           content: [
             {
               type: "text" as const,
-              text: `OpenClaw Fortress Error: Failed to verify ${target_url}\n\n${err.message}`,
+              text: `IntegrityPulse Fortress Error: Failed to verify ${target_url}\n\n${err.message}`,
             },
           ],
           isError: true,
@@ -1044,7 +1044,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
 
         const res = await fetch(liveUrl, {
           headers: {
-            "User-Agent": "OpenClaw-Fortress/1.0 (State Reconciler)",
+            "User-Agent": "IntegrityPulse-Fortress/1.0 (State Reconciler)",
             "Cache-Control": "no-cache, no-store, must-revalidate",
             "Pragma": "no-cache",
             Accept: "text/html,application/json,*/*",
@@ -1062,7 +1062,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
         return {
           content: [{
             type: "text" as const,
-            text: `## OpenClaw Fortress — Deployment State Reconciliation\n\n` +
+            text: `## IntegrityPulse Fortress — Deployment State Reconciliation\n\n` +
               `**Status: DIVERGED**\n\n` +
               `Failed to fetch live URL \`${route_manifest.live_url}\`: ${err.message}\n\n` +
               `Source state: ${sourceChecks.passed ? "PASS" : "FAIL"}\n` +
@@ -1145,7 +1145,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
       try {
         const res = await fetch(asset_url, {
           headers: {
-            "User-Agent": "OpenClaw-Fortress/1.0 (Asset Verifier)",
+            "User-Agent": "IntegrityPulse-Fortress/1.0 (Asset Verifier)",
             "Cache-Control": "no-cache",
           },
         });
@@ -1154,7 +1154,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
           return {
             content: [{
               type: "text" as const,
-              text: `## OpenClaw Fortress — Asset Identity Verification\n\n` +
+              text: `## IntegrityPulse Fortress — Asset Identity Verification\n\n` +
                 `**Asset:** \`${asset_url}\`\n` +
                 `**Status:** **MISMATCH**\n\n` +
                 `HTTP ${res.status} — asset not reachable.\n`,
@@ -1170,7 +1170,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
         const contentType = res.headers.get("content-type") || "unknown";
         const size = buffer.byteLength;
 
-        let report = `## OpenClaw Fortress — Asset Identity Verification\n\n`;
+        let report = `## IntegrityPulse Fortress — Asset Identity Verification\n\n`;
         report += `**Asset:** \`${asset_url}\`\n`;
         report += `**Content-Type:** ${contentType}\n`;
         report += `**Size:** ${size.toLocaleString()} bytes\n`;
@@ -1194,7 +1194,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
         return {
           content: [{
             type: "text" as const,
-            text: `OpenClaw Fortress Error: Failed to fetch asset ${asset_url}\n\n${err.message}`,
+            text: `IntegrityPulse Fortress Error: Failed to fetch asset ${asset_url}\n\n${err.message}`,
           }],
           isError: true,
         };
@@ -1227,7 +1227,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
       if (tierRank < 2) return { content: [{ type: "text" as const, text: TEAM_TOOL_GATE }], isError: true };
       const timestamp = new Date().toISOString();
 
-      let report = `## OpenClaw Fortress — Recovery Escalation\n\n`;
+      let report = `## IntegrityPulse Fortress — Recovery Escalation\n\n`;
       report += `**Status:** **LOCKED**\n`;
       report += `**Timestamp:** ${timestamp}\n`;
       report += `**Failed attempts:** ${attempt_count}\n`;
@@ -1271,7 +1271,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
         return {
           content: [{
             type: "text" as const,
-            text: "OpenClaw Fortress Error: Supabase client not available. Registry queries require a database connection.",
+            text: "IntegrityPulse Fortress Error: Supabase client not available. Registry queries require a database connection.",
           }],
           isError: true,
         };
@@ -1291,13 +1291,13 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
             return {
               content: [{
                 type: "text" as const,
-                text: `## OpenClaw Fortress — Canonical Truth\n\n**Query:** asset \`${target}\`\n**Result:** NOT FOUND\n\nNo active asset registered with purpose \`${target}\`. Register it in the \`asset_registry\` table before proceeding.`,
+                text: `## IntegrityPulse Fortress — Canonical Truth\n\n**Query:** asset \`${target}\`\n**Result:** NOT FOUND\n\nNo active asset registered with purpose \`${target}\`. Register it in the \`asset_registry\` table before proceeding.`,
               }],
               isError: true,
             };
           }
 
-          let report = `## OpenClaw Fortress — Canonical Truth\n\n`;
+          let report = `## IntegrityPulse Fortress — Canonical Truth\n\n`;
           report += `**Query type:** Asset\n`;
           report += `**Purpose:** ${asset.asset_purpose}\n`;
           report += `**Status:** ${asset.status}\n\n`;
@@ -1323,13 +1323,13 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
             return {
               content: [{
                 type: "text" as const,
-                text: `## OpenClaw Fortress — Canonical Truth\n\n**Query:** route \`${target}\`\n**Result:** NOT FOUND\n\nNo route manifest registered for \`${target}\`. Register it in the \`route_manifest\` table before proceeding.`,
+                text: `## IntegrityPulse Fortress — Canonical Truth\n\n**Query:** route \`${target}\`\n**Result:** NOT FOUND\n\nNo route manifest registered for \`${target}\`. Register it in the \`route_manifest\` table before proceeding.`,
               }],
               isError: true,
             };
           }
 
-          let report = `## OpenClaw Fortress — Canonical Truth\n\n`;
+          let report = `## IntegrityPulse Fortress — Canonical Truth\n\n`;
           report += `**Query type:** Route\n`;
           report += `**Route:** ${route.route_path}\n\n`;
           report += `| Property | Value |\n`;
@@ -1344,7 +1344,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
         if (query_type === "forbidden_strings") {
           const patterns = await getForbiddenPatterns(supabase);
 
-          let report = `## OpenClaw Fortress — Canonical Truth\n\n`;
+          let report = `## IntegrityPulse Fortress — Canonical Truth\n\n`;
           report += `**Query type:** Forbidden Strings\n`;
           report += `**Patterns registered:** ${patterns.length}\n\n`;
           report += `| Pattern | Category |\n`;
@@ -1365,7 +1365,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
         return {
           content: [{
             type: "text" as const,
-            text: `OpenClaw Fortress Error: Registry query failed.\n\n${err.message}`,
+            text: `IntegrityPulse Fortress Error: Registry query failed.\n\n${err.message}`,
           }],
           isError: true,
         };
@@ -1400,7 +1400,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
         try {
           const res = await fetch(target_url, {
             headers: {
-              "User-Agent": "OpenClaw-Fortress/1.0 (A11y Scanner)",
+              "User-Agent": "IntegrityPulse-Fortress/1.0 (A11y Scanner)",
               Accept: "text/html,*/*",
             },
           });
@@ -1408,7 +1408,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
             return {
               content: [{
                 type: "text" as const,
-                text: `OpenClaw Fortress Error: Failed to fetch ${target_url} — HTTP ${res.status}`,
+                text: `IntegrityPulse Fortress Error: Failed to fetch ${target_url} — HTTP ${res.status}`,
               }],
               isError: true,
             };
@@ -1419,7 +1419,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
           return {
             content: [{
               type: "text" as const,
-              text: `OpenClaw Fortress Error: Failed to fetch ${target_url}\n\n${err.message}`,
+              text: `IntegrityPulse Fortress Error: Failed to fetch ${target_url}\n\n${err.message}`,
             }],
             isError: true,
           };
@@ -1480,7 +1480,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
       try {
         const res = await fetch(target_url, {
           method: "HEAD",
-          headers: { "User-Agent": "OpenClaw-Fortress/1.0 (Visual Contract)" },
+          headers: { "User-Agent": "IntegrityPulse-Fortress/1.0 (Visual Contract)" },
         });
         status = res.status;
         contentType = res.headers.get("content-type") || "unknown";
@@ -1488,7 +1488,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
         return {
           content: [{
             type: "text" as const,
-            text: `OpenClaw Fortress Error: Target URL unreachable.\n\n${target_url}: ${err.message}`,
+            text: `IntegrityPulse Fortress Error: Target URL unreachable.\n\n${target_url}: ${err.message}`,
           }],
           isError: true,
         };
@@ -1496,7 +1496,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
 
       const timestamp = new Date().toISOString();
 
-      let report = `## OpenClaw Fortress — Visual Contract\n\n`;
+      let report = `## IntegrityPulse Fortress — Visual Contract\n\n`;
       report += `**Target:** \`${target_url}\`\n`;
       report += `**HTTP Status:** ${status}\n`;
       report += `**Content-Type:** ${contentType}\n`;
@@ -1575,7 +1575,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
 
       try {
         const prettyRes = await fetch(prettyUrl, {
-          headers: { "User-Agent": "OpenClaw-Fortress/1.0 (Route Parity)", Accept: "text/html,*/*" },
+          headers: { "User-Agent": "IntegrityPulse-Fortress/1.0 (Route Parity)", Accept: "text/html,*/*" },
           redirect: "follow",
         });
         prettyStatus = prettyRes.status;
@@ -1584,7 +1584,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
 
       try {
         const staticRes = await fetch(staticUrl, {
-          headers: { "User-Agent": "OpenClaw-Fortress/1.0 (Route Parity)", Accept: "text/html,*/*" },
+          headers: { "User-Agent": "IntegrityPulse-Fortress/1.0 (Route Parity)", Accept: "text/html,*/*" },
           redirect: "follow",
         });
         staticStatus = staticRes.status;
@@ -1669,7 +1669,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
           ? "FAIL"
           : "PASS";
 
-      let report = `## OpenClaw Fortress — Route Parity & Metadata Verification\n\n`;
+      let report = `## IntegrityPulse Fortress — Route Parity & Metadata Verification\n\n`;
       report += `**Route:** \`${target_route}\`\n`;
       report += `**Domain:** \`${base_domain}\`\n`;
       report += `**Status:** **${overallStatus}**\n\n`;
@@ -1754,7 +1754,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
         }
       }
 
-      let report = `## OpenClaw Fortress — Human Checkpoint\n\n`;
+      let report = `## IntegrityPulse Fortress — Human Checkpoint\n\n`;
       report += `**Status:** **BLOCKED_PENDING_APPROVAL**\n`;
       report += `**Risk category:** ${riskLabel}\n`;
       report += `**Timestamp:** ${timestamp}\n\n`;
@@ -1796,7 +1796,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
       github_repo: z
         .string()
         .regex(/^[^/]+\/[^/]+$/, "Must be in 'owner/repo' format")
-        .describe("GitHub repository (e.g., 'maryadawson-code/openclaw-finops')"),
+        .describe("GitHub repository (e.g., 'maryadawson-code/integritypulse')"),
       reason: z
         .string()
         .min(1)
@@ -1818,7 +1818,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
               headers: {
                 Authorization: `Bearer ${githubPat}`,
                 Accept: "application/vnd.github.v3+json",
-                "User-Agent": "OpenClaw-Fortress/1.0",
+                "User-Agent": "IntegrityPulse-Fortress/1.0",
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
@@ -1845,7 +1845,7 @@ export function createFortressServer(supabase?: SupabaseClient, env?: FortressEn
         dispatchError = "GITHUB_PAT not configured. Automated rollback requires a GitHub Personal Access Token.";
       }
 
-      let report = `## OpenClaw Fortress — Automated Rollback\n\n`;
+      let report = `## IntegrityPulse Fortress — Automated Rollback\n\n`;
       report += `**Status:** **ROLLBACK_INITIATED**\n`;
       report += `**Repository:** \`${github_repo}\`\n`;
       report += `**Timestamp:** ${timestamp}\n\n`;

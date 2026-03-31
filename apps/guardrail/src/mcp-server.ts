@@ -227,7 +227,7 @@ function formatAuditReport(
   const high = findings.filter((f) => f.severity === "HIGH").length;
   const medium = findings.filter((f) => f.severity === "MEDIUM").length;
 
-  let report = `## OpenClaw Guardrail — Infrastructure Audit\n\n`;
+  let report = `## IntegrityPulse Guardrail — Infrastructure Audit\n\n`;
   report += `**Provider:** ${provider} | **Format:** ${format}\n`;
 
   if (findings.length === 0) {
@@ -273,7 +273,7 @@ export function createGuardrailServer(): McpServer {
     name: "openclaw-guardrail",
     version: "1.0.0",
     instructions:
-      "You are connected to OpenClaw Guardrail, an infrastructure security scanner. " +
+      "You are connected to IntegrityPulse Guardrail, an infrastructure security scanner. " +
       "When a user writes or reviews Terraform, CloudFormation, Pulumi, or any infrastructure-as-code, " +
       "you SHOULD call audit_infrastructure_code to scan for security vulnerabilities and ghost costs " +
       "before the code is deployed. Always run Guardrail before suggesting 'terraform apply'.",

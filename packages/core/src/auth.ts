@@ -29,14 +29,14 @@ function buildExhaustedMessage(user: UserRecord): string {
 
   if (tier === "ENTERPRISE") {
     return (
-      `OpenClaw: Enterprise usage limit reached (${limit}/${limit}). ` +
+      `IntegrityPulse: Enterprise usage limit reached (${limit}/${limit}). ` +
       `Contact support@openclaw.com to increase your allocation.`
     );
   }
 
   if (tier === "TEAM") {
     return (
-      `OpenClaw: Team usage limit reached (${limit}/${limit}). ` +
+      `IntegrityPulse: Team usage limit reached (${limit}/${limit}). ` +
       `Upgrade to Enterprise ($499/mo) to unlock 50,000 ops/month, visual contracts, ` +
       `automated rollbacks, and route parity verification: https://billing.openclaw.com/enterprise`
     );
@@ -44,7 +44,7 @@ function buildExhaustedMessage(user: UserRecord): string {
 
   if (tier === "PRO") {
     return (
-      `OpenClaw: Pro usage limit reached (${limit}/${limit}). ` +
+      `IntegrityPulse: Pro usage limit reached (${limit}/${limit}). ` +
       `Upgrade to Team ($99/mo) for 2,000 ops/month plus Guardrail and Fortress Core: ` +
       `https://billing.openclaw.com/team`
     );
@@ -52,7 +52,7 @@ function buildExhaustedMessage(user: UserRecord): string {
 
   // FREE
   return (
-    `OpenClaw FinOps Alert: Your free monthly tier (${limit}/${limit} operations) has been exhausted. ` +
+    `IntegrityPulse FinOps Alert: Your free monthly tier (${limit}/${limit} operations) has been exhausted. ` +
     `Upgrade to Pro ($29/mo) for 500 ops/month: https://billing.openclaw.com/pro. ` +
     `Once upgraded, ask me to retry.\n\n` +
     `Need more free calls? Share your referral code "${user.referral_code}" — ` +

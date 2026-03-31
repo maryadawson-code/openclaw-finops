@@ -19,7 +19,7 @@ jobs:
         with:
           generate_release_notes: true
           body: |
-            ## OpenClaw Integrity Suite ${{ github.ref_name }}
+            ## IntegrityPulse Integrity Suite ${{ github.ref_name }}
 
             Four MCP servers solving the top four problems hitting vibe coders:
 
@@ -33,9 +33,9 @@ jobs:
             ```json
             {
               "mcpServers": {
-                "openclaw-finops": {
+                "integritypulse": {
                   "type": "streamable-http",
-                  "url": "https://openclaw-finops.marywomack.workers.dev/mcp",
+                  "url": "https://integritypulse.marywomack.workers.dev/mcp",
                   "headers": { "x-api-key": "YOUR_KEY" }
                 }
               }
@@ -46,5 +46,5 @@ jobs:
 
             Or one-click install:
             ```bash
-            curl -fsSL https://raw.githubusercontent.com/maryadawson-code/openclaw-finops/main/scripts/install.sh | bash
+            curl -fsSL https://raw.githubusercontent.com/maryadawson-code/integritypulse/main/scripts/install.sh | bash
             ```

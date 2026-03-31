@@ -1,4 +1,4 @@
-# OpenClaw Integrity Suite — Registry & Store Submissions Guide
+# IntegrityPulse Integrity Suite — Registry & Store Submissions Guide
 
 **Goal:** Get listed in every MCP registry, AI tool store, and developer marketplace.
 
@@ -6,7 +6,7 @@
 
 ### 1. Smithery.ai
 - Config ready: `smithery.yaml`
-- Submit: https://smithery.ai/submit or `npx @smithery/cli publish openclaw-finops`
+- Submit: https://smithery.ai/submit or `npx @smithery/cli publish integritypulse`
 
 ### 2. Glama.ai
 - Config ready: `mcp-server.json`
@@ -34,7 +34,7 @@
 - Package copilot/ configs as Teams app
 
 ### 9. VS Code Marketplace
-- Create extension that pre-configures OpenClaw MCP servers
+- Create extension that pre-configures IntegrityPulse MCP servers
 
 ### 10. JetBrains Marketplace
 - Create plugin for AI Assistant MCP config

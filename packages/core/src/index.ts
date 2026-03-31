@@ -1,4 +1,4 @@
-// @openclaw/core — shared auth, billing, and database logic for all OpenClaw servers
+// @integritypulse/core — shared auth, billing, and database logic for all IntegrityPulse servers
 
 export {
   authenticateAndCheckLimits,

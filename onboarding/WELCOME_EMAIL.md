@@ -6,13 +6,13 @@ This is the plain-text reference for the HTML email sent automatically by `src/e
 
 ## Subject Line
 
-**Welcome to OpenClaw FinOps Pro — your key is inside**
+**Welcome to IntegrityPulse FinOps Pro — your key is inside**
 
 ---
 
 ## Email Content
 
-### Welcome to OpenClaw FinOps Pro
+### Welcome to IntegrityPulse FinOps Pro
 
 Your cloud cost forecasts are now unlimited.
 
@@ -37,9 +37,9 @@ Open `~/Library/Application Support/Claude/claude_desktop_config.json` and add:
 ```json
 {
   "mcpServers": {
-    "openclaw-finops": {
+    "integritypulse": {
       "type": "streamable-http",
-      "url": "https://openclaw-finops.marywomack.workers.dev/mcp",
+      "url": "https://integritypulse.marywomack.workers.dev/mcp",
       "headers": { "x-api-key": "YOUR_PRO_KEY" }
     }
   }
@@ -52,9 +52,9 @@ Go to **Settings > Models > MCP**, click **Add Server**, and paste:
 
 ```json
 {
-  "openclaw-finops": {
+  "integritypulse": {
     "type": "streamable-http",
-    "url": "https://openclaw-finops.marywomack.workers.dev/mcp",
+    "url": "https://integritypulse.marywomack.workers.dev/mcp",
     "headers": { "x-api-key": "YOUR_PRO_KEY" }
   }
 }
@@ -63,9 +63,9 @@ Go to **Settings > Models > MCP**, click **Add Server**, and paste:
 **Claude Code (CLI)**
 
 ```bash
-claude mcp add openclaw-finops \
+claude mcp add integritypulse \
   --transport http \
-  https://openclaw-finops.marywomack.workers.dev/mcp \
+  https://integritypulse.marywomack.workers.dev/mcp \
   --header "x-api-key: YOUR_PRO_KEY"
 ```
 

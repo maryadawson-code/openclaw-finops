@@ -1,4 +1,4 @@
-# OpenClaw FinOps — Launch Posts
+# IntegrityPulse FinOps — Launch Posts
 
 ---
 
@@ -23,7 +23,7 @@ The real number? $204.40/mo.
 When agents deploy infrastructure autonomously, that hallucination becomes an invoice.
 
 **Tweet 3:**
-OpenClaw FinOps is an MCP server that gives AI agents a grounded pricing oracle.
+IntegrityPulse FinOps is an MCP server that gives AI agents a grounded pricing oracle.
 
 One tool call. Verified pricing matrix. Line-item breakdown.
 
@@ -56,9 +56,9 @@ Live now. Add it to Claude Desktop or Cursor in 30 seconds:
 ```json
 {
   "mcpServers": {
-    "openclaw-finops": {
+    "integritypulse": {
       "type": "streamable-http",
-      "url": "https://openclaw-finops.marywomack.workers.dev/mcp",
+      "url": "https://integritypulse.marywomack.workers.dev/mcp",
       "headers": { "x-api-key": "YOUR_KEY" }
     }
   }
@@ -87,7 +87,7 @@ I asked Claude what an RDS Postgres db.m5.large costs. It said "$15/month." The 
 
 That's not a rounding error. That's a 13x discrepancy. And when agents start executing deployments autonomously, these hallucinations become real line items on your AWS bill.
 
-Today I'm releasing OpenClaw FinOps -- an open-source MCP (Model Context Protocol) server that acts as a grounded pricing oracle for AI agents. It covers AWS, GCP, and Azure with a verified pricing matrix, and returns deterministic, line-item cost forecasts directly inside the agent's conversation.
+Today I'm releasing IntegrityPulse FinOps -- an open-source MCP (Model Context Protocol) server that acts as a grounded pricing oracle for AI agents. It covers AWS, GCP, and Azure with a verified pricing matrix, and returns deterministic, line-item cost forecasts directly inside the agent's conversation.
 
 It also introduces a pattern I'm calling "Revenue-Gated MCP" -- a way to monetize AI tool access without breaking the agent experience. When a free-tier user exhausts their 25 monthly operations, the server returns the upgrade prompt inside the conversation itself (using MCP's isError flag), not as an HTTP error that gets swallowed by the transport layer.
 
@@ -106,7 +106,7 @@ Link in comments.
 ## Hacker News
 
 **Title:**
-Show HN: OpenClaw FinOps -- Revenue-gated MCP server for AI cloud cost forecasting
+Show HN: IntegrityPulse FinOps -- Revenue-gated MCP server for AI cloud cost forecasting
 
 **Comment:**
 
@@ -114,7 +114,7 @@ Hi HN. I built an MCP server that gives AI agents accurate cloud pricing instead
 
 The core problem: LLMs are confidently wrong about cloud pricing. Ask one what an RDS instance costs and you'll get answers that are off by 10-15x. This matters increasingly as agents move toward autonomous infrastructure provisioning.
 
-OpenClaw FinOps is a remote MCP server (Streamable HTTP) with one tool -- `forecast_deployment_cost`. You pass it a provider (AWS/GCP/Azure) and a list of services, and it returns a line-item cost breakdown from a verified pricing matrix. No generation involved.
+IntegrityPulse FinOps is a remote MCP server (Streamable HTTP) with one tool -- `forecast_deployment_cost`. You pass it a provider (AWS/GCP/Azure) and a list of services, and it returns a line-item cost breakdown from a verified pricing matrix. No generation involved.
 
 The part I think HN might find interesting is the monetization pattern. MCP servers are consumed by LLMs, not browsers. When a free-tier user hits their 25 op/month limit, returning HTTP 402 or 429 is useless -- the agent's MCP client swallows it and the user never sees it.
 

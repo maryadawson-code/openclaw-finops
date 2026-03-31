@@ -7,85 +7,85 @@
   "claude_desktop": {
     "_file": "~/Library/Application Support/Claude/claude_desktop_config.json (macOS) or %APPDATA%/Claude/claude_desktop_config.json (Windows)",
     "mcpServers": {
-      "openclaw-finops": { "type": "streamable-http", "url": "https://openclaw-finops.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } },
-      "openclaw-api-bridge": { "type": "streamable-http", "url": "https://openclaw-api-bridge.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } },
-      "openclaw-guardrail": { "type": "streamable-http", "url": "https://openclaw-guardrail.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } },
-      "openclaw-fortress": { "type": "streamable-http", "url": "https://openclaw-fortress.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } },
-      "openclaw-ambassador": { "type": "streamable-http", "url": "https://openclaw-ambassador.marywomack.workers.dev/mcp" }
+      "integritypulse": { "type": "streamable-http", "url": "https://integritypulse.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } },
+      "openclaw-api-bridge": { "type": "streamable-http", "url": "https://integritypulse-api-bridge.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } },
+      "openclaw-guardrail": { "type": "streamable-http", "url": "https://integritypulse-guardrail.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } },
+      "openclaw-fortress": { "type": "streamable-http", "url": "https://integritypulse-fortress.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } },
+      "openclaw-ambassador": { "type": "streamable-http", "url": "https://integritypulse-ambassador.marywomack.workers.dev/mcp" }
     }
   },
 
   "cursor": {
     "_file": ".cursor/mcp.json or Cursor Settings > MCP > Add Server",
     "mcpServers": {
-      "openclaw-finops": { "type": "streamable-http", "url": "https://openclaw-finops.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } },
-      "openclaw-api-bridge": { "type": "streamable-http", "url": "https://openclaw-api-bridge.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } },
-      "openclaw-guardrail": { "type": "streamable-http", "url": "https://openclaw-guardrail.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } },
-      "openclaw-fortress": { "type": "streamable-http", "url": "https://openclaw-fortress.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } },
-      "openclaw-ambassador": { "type": "streamable-http", "url": "https://openclaw-ambassador.marywomack.workers.dev/mcp" }
+      "integritypulse": { "type": "streamable-http", "url": "https://integritypulse.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } },
+      "openclaw-api-bridge": { "type": "streamable-http", "url": "https://integritypulse-api-bridge.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } },
+      "openclaw-guardrail": { "type": "streamable-http", "url": "https://integritypulse-guardrail.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } },
+      "openclaw-fortress": { "type": "streamable-http", "url": "https://integritypulse-fortress.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } },
+      "openclaw-ambassador": { "type": "streamable-http", "url": "https://integritypulse-ambassador.marywomack.workers.dev/mcp" }
     }
   },
 
   "windsurf": {
     "_file": "~/.codeium/windsurf/mcp_config.json",
     "mcpServers": {
-      "openclaw-finops": { "type": "streamable-http", "url": "https://openclaw-finops.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } },
-      "openclaw-ambassador": { "type": "streamable-http", "url": "https://openclaw-ambassador.marywomack.workers.dev/mcp" }
+      "integritypulse": { "type": "streamable-http", "url": "https://integritypulse.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } },
+      "openclaw-ambassador": { "type": "streamable-http", "url": "https://integritypulse-ambassador.marywomack.workers.dev/mcp" }
     }
   },
 
   "vscode_copilot": {
     "_file": ".vscode/mcp.json (workspace) or VS Code Settings > MCP",
     "servers": {
-      "openclaw-finops": { "type": "http", "url": "https://openclaw-finops.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } },
-      "openclaw-ambassador": { "type": "http", "url": "https://openclaw-ambassador.marywomack.workers.dev/mcp" }
+      "integritypulse": { "type": "http", "url": "https://integritypulse.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } },
+      "openclaw-ambassador": { "type": "http", "url": "https://integritypulse-ambassador.marywomack.workers.dev/mcp" }
     }
   },
 
   "jetbrains": {
     "_file": "Settings > Tools > AI Assistant > MCP Servers > Add",
     "servers": [
-      { "name": "OpenClaw FinOps", "url": "https://openclaw-finops.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } },
-      { "name": "OpenClaw Ambassador", "url": "https://openclaw-ambassador.marywomack.workers.dev/mcp" }
+      { "name": "IntegrityPulse FinOps", "url": "https://integritypulse.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } },
+      { "name": "IntegrityPulse Ambassador", "url": "https://integritypulse-ambassador.marywomack.workers.dev/mcp" }
     ]
   },
 
   "claude_code": {
     "_instructions": [
-      "claude mcp add openclaw-finops --transport http https://openclaw-finops.marywomack.workers.dev/mcp --header 'x-api-key: YOUR_API_KEY'",
-      "claude mcp add openclaw-ambassador --transport http https://openclaw-ambassador.marywomack.workers.dev/mcp"
+      "claude mcp add integritypulse --transport http https://integritypulse.marywomack.workers.dev/mcp --header 'x-api-key: YOUR_API_KEY'",
+      "claude mcp add openclaw-ambassador --transport http https://integritypulse-ambassador.marywomack.workers.dev/mcp"
     ]
   },
 
   "zed": {
     "_file": "~/.config/zed/settings.json under context_servers",
     "context_servers": {
-      "openclaw-finops": { "settings": { "url": "https://openclaw-finops.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } } }
+      "integritypulse": { "settings": { "url": "https://integritypulse.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } } }
     }
   },
 
   "continue_dev": {
     "_file": "~/.continue/config.yaml",
     "mcpServers": [
-      { "name": "openclaw-finops", "transport": { "type": "streamable-http", "url": "https://openclaw-finops.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } } },
-      { "name": "openclaw-ambassador", "transport": { "type": "streamable-http", "url": "https://openclaw-ambassador.marywomack.workers.dev/mcp" } }
+      { "name": "integritypulse", "transport": { "type": "streamable-http", "url": "https://integritypulse.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } } },
+      { "name": "openclaw-ambassador", "transport": { "type": "streamable-http", "url": "https://integritypulse-ambassador.marywomack.workers.dev/mcp" } }
     ]
   },
 
   "cline": {
     "_file": "VS Code Settings > Cline > MCP Servers",
     "mcpServers": {
-      "openclaw-finops": { "type": "streamable-http", "url": "https://openclaw-finops.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } }
+      "integritypulse": { "type": "streamable-http", "url": "https://integritypulse.marywomack.workers.dev/mcp", "headers": { "x-api-key": "YOUR_API_KEY" } }
     }
   },
 
   "aider": {
     "_file": "~/.aider.conf.yml",
-    "mcp_servers": { "openclaw-finops": "https://openclaw-finops.marywomack.workers.dev/mcp" }
+    "mcp_servers": { "integritypulse": "https://integritypulse.marywomack.workers.dev/mcp" }
   },
 
   "openai_agents_sdk": {
-    "url": "https://openclaw-finops.marywomack.workers.dev/mcp",
+    "url": "https://integritypulse.marywomack.workers.dev/mcp",
     "transport": "streamable-http",
     "headers": { "x-api-key": "YOUR_API_KEY" }
   }

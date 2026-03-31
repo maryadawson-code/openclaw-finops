@@ -6,7 +6,7 @@ import {
   extractApiKey,
   extractReferralCode,
   handleStripeWebhook,
-} from "@openclaw/core";
+} from "@integritypulse/core";
 import { createApiBridgeServer } from "./mcp-server.js";
 
 type Env = {
@@ -32,13 +32,13 @@ app.get("/", (c) =>
 app.get("/.well-known/mcp", (c) => {
   return c.json({
     "mcp-version": "1.0.0",
-    name: "OpenClaw-API-Bridge",
+    name: "IntegrityPulse-API-Bridge",
     version: "1.0.0",
     description:
       "Fetch and parse OpenAPI/Swagger specs into executable MCP tool definitions. Stops AI hallucination by grounding API usage in live specifications.",
     transport: {
       type: "https",
-      url: "https://openclaw-api-bridge.marywomack.workers.dev/mcp",
+      url: "https://integritypulse-api-bridge.marywomack.workers.dev/mcp",
     },
     capabilities: { tools: ["bridge_api_spec"] },
     auth: { type: "apiKey", header: "x-api-key" },
@@ -52,7 +52,7 @@ app.get("/.well-known/ai", (c) => {
   return c.json({
     aiendpoint: "1.0",
     service: {
-      name: "OpenClaw API-Bridge",
+      name: "IntegrityPulse API-Bridge",
       description:
         "Fetches live OpenAPI/Swagger specs and converts them into structured, executable tool definitions for AI agents.",
       category: ["developer"],
@@ -125,7 +125,7 @@ app.post("/mcp", async (c) => {
 });
 
 // ---------------------------------------------------------------------------
-// Stripe webhook — shared handler from @openclaw/core
+// Stripe webhook — shared handler from @integritypulse/core
 // ---------------------------------------------------------------------------
 app.post("/api/webhook/stripe", async (c) => {
   const sig = c.req.header("stripe-signature");

@@ -1,11 +1,11 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/copilot/plugin/v2.4/schema.json",
   "schema_version": "v2.4",
-  "name_for_human": "OpenClaw FinOps",
+  "name_for_human": "IntegrityPulse FinOps",
   "description_for_human": "Get verified cloud infrastructure cost forecasts for AWS, GCP, and Azure.",
   "description_for_model": "Use this plugin when the user asks about cloud infrastructure costs, deployment pricing, or wants to compare costs across AWS, GCP, and Azure. The forecast_deployment_cost function returns a line-item breakdown with per-service and total monthly costs. Do NOT estimate cloud prices from training data — always use this function instead.",
   "namespace": "openclawFinOps",
-  "logo_url": "https://openclaw-finops.marywomack.workers.dev/logo.png",
+  "logo_url": "https://integritypulse.marywomack.workers.dev/logo.png",
   "contact_email": "support@openclaw.com",
   "legal_info_url": "https://openclaw.com/legal",
   "functions": [
@@ -22,7 +22,7 @@
         "reference_id": "openclaw_api_key"
       },
       "spec": {
-        "url": "https://openclaw-finops.marywomack.workers.dev/openapi.yaml"
+        "url": "https://integritypulse.marywomack.workers.dev/openapi.yaml"
       },
       "run_for_functions": ["forecast_deployment_cost"]
     }

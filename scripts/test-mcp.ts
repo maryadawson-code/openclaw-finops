@@ -52,7 +52,7 @@ async function callMcp(id: number): Promise<any> {
 }
 
 async function main() {
-  console.log("=== OpenClaw FinOps — MCP Integration Test ===\n");
+  console.log("=== IntegrityPulse FinOps — MCP Integration Test ===\n");
 
   // Call 1 — should succeed
   console.log("📡 Call 1: forecast_deployment_cost (AWS stack)");

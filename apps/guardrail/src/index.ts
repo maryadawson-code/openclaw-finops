@@ -7,11 +7,11 @@ import {
   extractReferralCode,
   handleStripeWebhook,
   TIER_RANK,
-} from "@openclaw/core";
+} from "@integritypulse/core";
 import { createGuardrailServer } from "./mcp-server.js";
 
 const TEAM_GATE_MESSAGE =
-  "OpenClaw Guardrail requires a TEAM subscription ($99/mo). " +
+  "IntegrityPulse Guardrail requires a TEAM subscription ($99/mo). " +
   "Upgrade to scan infrastructure for security vulnerabilities and ghost costs: " +
   "https://billing.openclaw.com/team";
 
@@ -38,13 +38,13 @@ app.get("/", (c) =>
 app.get("/.well-known/mcp", (c) => {
   return c.json({
     "mcp-version": "1.0.0",
-    name: "OpenClaw-Guardrail",
+    name: "IntegrityPulse-Guardrail",
     version: "1.0.0",
     description:
       "Enterprise infrastructure security scanner. Audits IaC for security vulnerabilities and ghost costs before deployment.",
     transport: {
       type: "https",
-      url: "https://openclaw-guardrail.marywomack.workers.dev/mcp",
+      url: "https://integritypulse-guardrail.marywomack.workers.dev/mcp",
     },
     capabilities: { tools: ["audit_infrastructure_code"] },
     auth: { type: "apiKey", header: "x-api-key" },
@@ -59,7 +59,7 @@ app.get("/.well-known/ai", (c) => {
   return c.json({
     aiendpoint: "1.0",
     service: {
-      name: "OpenClaw Guardrail",
+      name: "IntegrityPulse Guardrail",
       description:
         "Enterprise infrastructure security scanner. Audits Terraform, CloudFormation, and Pulumi code for vulnerabilities and ghost costs.",
       category: ["developer"],

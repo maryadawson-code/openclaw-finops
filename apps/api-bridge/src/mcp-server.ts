@@ -1,7 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { parse as parseYaml } from "yaml";
-import type { UserRecord } from "@openclaw/core";
+import type { UserRecord } from "@integritypulse/core";
 
 // --- Tier limits for number of APIs that can be bridged per session ---
 const API_LIMITS: Record<string, number> = {
@@ -132,7 +132,7 @@ async function fetchAndParseSpec(url: string): Promise<BridgeResult> {
  * Format the parsed spec as a readable Markdown report.
  */
 function formatBridgeReport(result: BridgeResult): string {
-  let report = `## OpenClaw API-Bridge — Spec Analysis\n\n`;
+  let report = `## IntegrityPulse API-Bridge — Spec Analysis\n\n`;
   report += `**API:** ${result.spec_title} v${result.spec_version}\n`;
   report += `**Base URL:** \`${result.base_url}\`\n`;
   report += `**Endpoints discovered:** ${result.endpoints_found}\n\n`;
@@ -187,7 +187,7 @@ export function createApiBridgeServer(user: UserRecord): McpServer {
     name: "openclaw-api-bridge",
     version: "1.0.0",
     instructions:
-      "You are connected to OpenClaw API-Bridge. Use the bridge_api_spec tool to fetch " +
+      "You are connected to IntegrityPulse API-Bridge. Use the bridge_api_spec tool to fetch " +
       "and parse OpenAPI/Swagger specifications from any URL. This converts API docs into " +
       "structured, executable tool definitions that you can reference when helping users " +
       "integrate with external APIs. Always use this tool instead of guessing API schemas.",
@@ -213,7 +213,7 @@ export function createApiBridgeServer(user: UserRecord): McpServer {
             : "Pro tier allows 5 API bridges per session. Upgrade to Enterprise for unlimited: https://billing.openclaw.com/enterprise";
 
         return {
-          content: [{ type: "text" as const, text: `OpenClaw API-Bridge: Limit reached. ${tierMsg}` }],
+          content: [{ type: "text" as const, text: `IntegrityPulse API-Bridge: Limit reached. ${tierMsg}` }],
           isError: true,
         };
       }
@@ -238,7 +238,7 @@ export function createApiBridgeServer(user: UserRecord): McpServer {
           content: [
             {
               type: "text" as const,
-              text: `OpenClaw API-Bridge Error: ${err.message}\n\nEnsure the URL points directly to an OpenAPI 3.x or Swagger 2.x spec (JSON or YAML).`,
+              text: `IntegrityPulse API-Bridge Error: ${err.message}\n\nEnsure the URL points directly to an OpenAPI 3.x or Swagger 2.x spec (JSON or YAML).`,
             },
           ],
           isError: true,

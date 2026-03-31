@@ -1,14 +1,14 @@
-# Smithery.ai configuration for OpenClaw Integrity Suite
+# Smithery.ai configuration for IntegrityPulse Integrity Suite
 
 startCommand:
   type: remote
-  url: https://openclaw-finops.marywomack.workers.dev/mcp
+  url: https://integritypulse.marywomack.workers.dev/mcp
   transport: streamable-http
   headers:
     x-api-key: "${API_KEY}"
 
-name: openclaw-finops
-display_name: "OpenClaw Integrity Suite — FinOps + Security + API Verification"
+name: integritypulse
+display_name: "IntegrityPulse Integrity Suite — FinOps + Security + API Verification"
 description: >
   Stop AI agents from hallucinating cloud costs, fabricating API endpoints, and
   generating insecure Terraform. Four MCP servers solving the top four problems
@@ -40,4 +40,4 @@ configSchema:
     API_KEY:
       type: string
       title: API Key
-      description: Your OpenClaw API key. Get one free — 25 ops/month, no credit card.
+      description: Your IntegrityPulse API key. Get one free — 25 ops/month, no credit card.

@@ -19,7 +19,7 @@ const app = new Hono<{ Bindings: Env }>();
 // ---------------------------------------------------------------------------
 // Health check
 // ---------------------------------------------------------------------------
-app.get("/", (c) => c.json({ status: "ok", service: "openclaw-finops" }));
+app.get("/", (c) => c.json({ status: "ok", service: "integritypulse" }));
 
 // ---------------------------------------------------------------------------
 // Discovery: llms.txt (the robots.txt for AI crawlers)
@@ -40,13 +40,13 @@ app.get("/llms-full.txt", (c) => {
 app.get("/.well-known/mcp", (c) => {
   return c.json({
     "mcp-version": "1.0.0",
-    name: "OpenClaw-FinOps",
+    name: "IntegrityPulse-FinOps",
     version: "1.0.0",
     description:
       "Real-time cloud cost forecasting with a built-in Revenue Gate for agentic workflows.",
     transport: {
       type: "https",
-      url: "https://openclaw-finops.marywomack.workers.dev/mcp",
+      url: "https://integritypulse.marywomack.workers.dev/mcp",
     },
     capabilities: {
       tools: ["forecast_deployment_cost"],
@@ -64,10 +64,10 @@ app.get("/.well-known/mcp", (c) => {
 // ---------------------------------------------------------------------------
 app.get("/.well-known/agent.json", (c) => {
   return c.json({
-    name: "OpenClaw FinOps",
+    name: "IntegrityPulse FinOps",
     description:
       "Cloud deployment cost forecasting agent. Returns verified, line-item pricing for AWS, GCP, and Azure. Prevents cost hallucinations in agentic infrastructure workflows.",
-    url: "https://openclaw-finops.marywomack.workers.dev",
+    url: "https://integritypulse.marywomack.workers.dev",
     version: "1.0.0",
     capabilities: {
       streaming: false,
@@ -103,7 +103,7 @@ app.get("/.well-known/ai", (c) => {
   return c.json({
     aiendpoint: "1.0",
     service: {
-      name: "OpenClaw FinOps",
+      name: "IntegrityPulse FinOps",
       description:
         "Cloud deployment cost forecasting for AI agents. Returns verified pricing for AWS, GCP, and Azure from a deterministic matrix.",
       category: ["finance", "developer"],
@@ -141,7 +141,7 @@ app.get("/.well-known/ai", (c) => {
     },
     meta: {
       last_updated: "2026-03-28",
-      status: "https://openclaw-finops.marywomack.workers.dev/",
+      status: "https://integritypulse.marywomack.workers.dev/",
     },
   });
 });

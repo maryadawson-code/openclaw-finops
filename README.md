@@ -1,4 +1,4 @@
-# OpenClaw FinOps
+# IntegrityPulse FinOps
 
 **Stop your AI agents from hallucinating cloud costs. Get real pricing forecasts inside the conversation.**
 
@@ -10,14 +10,14 @@
 
 ## What is this?
 
-OpenClaw FinOps is a **remote MCP server** that gives AI coding agents accurate, real-time cloud deployment cost forecasts. Instead of your agent guessing that "an EC2 instance costs around $50/month," it calls a tool backed by a verified pricing matrix and returns a line-item breakdown.
+IntegrityPulse FinOps is a **remote MCP server** that gives AI coding agents accurate, real-time cloud deployment cost forecasts. Instead of your agent guessing that "an EC2 instance costs around $50/month," it calls a tool backed by a verified pricing matrix and returns a line-item breakdown.
 
 **One tool. Three providers. Zero hallucinations.**
 
 ```
 User: "What would it cost to run our API on AWS with an m5.large, a managed Postgres, and Redis?"
 
-Agent (via OpenClaw FinOps):
+Agent (via IntegrityPulse FinOps):
   | Service                    | Category | Hours | Est. Cost |
   |----------------------------|----------|-------|-----------|
   | m5.large                   | Compute  | 730   | $70.08    |
@@ -38,9 +38,9 @@ Add this to your `claude_desktop_config.json`:
 ```json
 {
   "mcpServers": {
-    "openclaw-finops": {
+    "integritypulse": {
       "type": "streamable-http",
-      "url": "https://openclaw-finops.marywomack.workers.dev/mcp",
+      "url": "https://integritypulse.marywomack.workers.dev/mcp",
       "headers": {
         "x-api-key": "YOUR_API_KEY"
       }
@@ -56,9 +56,9 @@ Add to your `.cursor/mcp.json`:
 ```json
 {
   "mcpServers": {
-    "openclaw-finops": {
+    "integritypulse": {
       "type": "streamable-http",
-      "url": "https://openclaw-finops.marywomack.workers.dev/mcp",
+      "url": "https://integritypulse.marywomack.workers.dev/mcp",
       "headers": {
         "x-api-key": "YOUR_API_KEY"
       }
@@ -70,7 +70,7 @@ Add to your `.cursor/mcp.json`:
 ### cURL
 
 ```bash
-curl -X POST https://openclaw-finops.marywomack.workers.dev/mcp \
+curl -X POST https://integritypulse.marywomack.workers.dev/mcp \
   -H "Content-Type: application/json" \
   -H "Accept: application/json, text/event-stream" \
   -H "x-api-key: YOUR_API_KEY" \
@@ -116,7 +116,7 @@ AI agents are moving from "write me code" to "deploy this for me." When an agent
 
 **The problem:** LLMs hallucinate pricing. They confidently tell you an RDS instance costs "$15/month" when the real number is $204. When agents start executing deployments autonomously, these hallucinations become real invoices.
 
-**The solution:** OpenClaw FinOps is a **grounded pricing oracle** that agents call as a tool. The pricing matrix is maintained, versioned, and deterministic. No generation, no guessing.
+**The solution:** IntegrityPulse FinOps is a **grounded pricing oracle** that agents call as a tool. The pricing matrix is maintained, versioned, and deterministic. No generation, no guessing.
 
 ### Agentic Commerce & the Revenue Gate
 
@@ -136,7 +136,7 @@ Here's how it works:
   "result": {
     "content": [{
       "type": "text",
-      "text": "OpenClaw FinOps Alert: Your free monthly tier (25/25 operations) has been exhausted. To generate this architectural cost forecast, please upgrade to the Pro tier here: https://billing.openclaw.com/upgrade. Once upgraded, ask me to retry."
+      "text": "IntegrityPulse FinOps Alert: Your free monthly tier (25/25 operations) has been exhausted. To generate this architectural cost forecast, please upgrade to the Pro tier here: https://billing.openclaw.com/upgrade. Once upgraded, ask me to retry."
     }],
     "isError": true
   }
@@ -181,8 +181,8 @@ When a user upgrades via the billing link, Stripe fires a `checkout.session.comp
 ## Self-Hosting
 
 ```bash
-git clone https://github.com/maryadawson-code/openclaw-finops.git
-cd openclaw-finops
+git clone https://github.com/maryadawson-code/integritypulse.git
+cd integritypulse
 npm install
 
 # Configure secrets

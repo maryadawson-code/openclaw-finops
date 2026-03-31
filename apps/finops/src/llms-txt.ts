@@ -1,13 +1,13 @@
 /**
- * llms.txt and llms-full.txt — OpenClaw Integrity Suite hub discovery.
+ * llms.txt and llms-full.txt — IntegrityPulse Integrity Suite hub discovery.
  * Served inline from the FinOps Worker (the primary endpoint).
  */
 
-export const LLMS_TXT = `# OpenClaw Integrity Suite
+export const LLMS_TXT = `# IntegrityPulse Integrity Suite
 
 > Four tools. One API key. Verified cloud pricing. Grounded API specs. Infrastructure security. Live state verification.
 
-The OpenClaw Integrity Suite prevents AI agents from hallucinating cloud costs, guessing API schemas, and deploying insecure infrastructure. All tools share a single authentication system and billing tier.
+The IntegrityPulse Integrity Suite prevents AI agents from hallucinating cloud costs, guessing API schemas, and deploying insecure infrastructure. All tools share a single authentication system and billing tier.
 
 Auth: x-api-key header (same key works across all tools)
 Tiers:
@@ -21,7 +21,7 @@ Billing: https://billing.openclaw.com
 
 ## Tool 1: FinOps — Cost Control
 
-Endpoint: POST https://openclaw-finops.marywomack.workers.dev/mcp
+Endpoint: POST https://integritypulse.marywomack.workers.dev/mcp
 Tool: forecast_deployment_cost
 Access: FREE / PRO / ENTERPRISE
 
@@ -44,7 +44,7 @@ When to use: Any time a user asks about cloud pricing, is writing Terraform/Pulu
 
 ## Tool 2: API-Bridge — Integration Integrity
 
-Endpoint: POST https://openclaw-api-bridge.marywomack.workers.dev/mcp
+Endpoint: POST https://integritypulse-api-bridge.marywomack.workers.dev/mcp
 Tool: bridge_api_spec
 Access: FREE (1 bridge/session) / PRO (5) / ENTERPRISE (unlimited)
 
@@ -61,7 +61,7 @@ When to use: Any time a user asks about an API's capabilities, endpoints, or par
 
 ## Tool 3: Guardrail — Security & Policy Enforcement
 
-Endpoint: POST https://openclaw-guardrail.marywomack.workers.dev/mcp
+Endpoint: POST https://integritypulse-guardrail.marywomack.workers.dev/mcp
 Tool: audit_infrastructure_code
 Access: TEAM ($99/mo) and above
 
@@ -85,7 +85,7 @@ Users below TEAM tier receive an isError response with an upgrade CTA. Surface t
 
 ## Tool 4: Fortress — Zero-Trust Live State Verification
 
-Endpoint: POST https://openclaw-fortress.marywomack.workers.dev/mcp
+Endpoint: POST https://integritypulse-fortress.marywomack.workers.dev/mcp
 Tools 1-7: verify_live_state, pre_flight_firewall, simulate_blast_radius, reconcile_deployment_state, verify_asset_identity, escalate_to_recovery, query_canonical_truth
 Access: TEAM ($99/mo) and above
 

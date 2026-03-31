@@ -28,7 +28,7 @@ INSERT INTO growth_config (key, value) VALUES
     {"id":"A","headline":"Verified Cloud Pricing for AI Agents","sub":"Stop hallucinated cost estimates. AWS, GCP, Azure.","weight":25},
     {"id":"B","headline":"Your AI Agent Is Wrong About Cloud Costs","sub":"LLMs say RDS costs $15/mo. Real price: $204. We fix that.","weight":25},
     {"id":"C","headline":"The Integrity Layer for Agentic Infrastructure","sub":"Four tools that stop AI agents from making expensive mistakes.","weight":25},
-    {"id":"D","headline":"Stop Your AI Agent From Blowing Your Cloud Budget","sub":"13x pricing errors become real invoices. OpenClaw returns the real number.","weight":25}
+    {"id":"D","headline":"Stop Your AI Agent From Blowing Your Cloud Budget","sub":"13x pricing errors become real invoices. IntegrityPulse returns the real number.","weight":25}
   ]'::jsonb),
   ('share_order', '["x","linkedin","reddit","hn"]'::jsonb),
   ('best_channel', '"x"'::jsonb)

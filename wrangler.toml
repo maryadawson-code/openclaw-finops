@@ -1,6 +1,6 @@
 # Root wrangler.toml — points to the FinOps app for backward compatibility.
 # For per-app deployment, cd into apps/finops or apps/api-bridge.
-name = "openclaw-finops"
+name = "integritypulse"
 main = "apps/finops/src/index.ts"
 compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat"]

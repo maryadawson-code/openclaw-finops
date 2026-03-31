@@ -3,11 +3,11 @@ export const DEMO_HTML = `<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>OpenClaw Integrity Suite — See It In Action</title>
-<meta property="og:title" content="OpenClaw: 4 tools that stop AI agents from making expensive mistakes">
+<title>IntegrityPulse Integrity Suite — See It In Action</title>
+<meta property="og:title" content="IntegrityPulse: 4 tools that stop AI agents from making expensive mistakes">
 <meta property="og:description" content="Watch AI agents get verified cloud pricing, real API specs, security audits, and ghost cost detection.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://openclaw-finops.marywomack.workers.dev/demo">
+<meta property="og:url" content="https://integritypulse.marywomack.workers.dev/demo">
 <meta name="twitter:card" content="summary_large_image">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -124,24 +124,24 @@ footer{text-align:center;padding:0 24px 32px;color:#555;font-size:.8rem}
 </div>
 
 <div style="display:flex;justify-content:center;gap:10px;margin:24px 0;flex-wrap:wrap">
-  <a href="https://twitter.com/intent/tweet?text=AI%20agents%20hallucinate%20cloud%20costs%20by%205-15x.%20This%20open-source%20MCP%20tool%20fixes%20it.%20Free%20tier%2C%20MIT%20licensed.&url=https://openclaw-finops.marywomack.workers.dev/demo" target="_blank" rel="noopener" style="background:#1DA1F2;color:#fff;padding:10px 20px;border-radius:9999px;text-decoration:none;font-weight:600;font-size:13px">Share on X</a>
-  <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://openclaw-finops.marywomack.workers.dev/demo" target="_blank" rel="noopener" style="background:#0A66C2;color:#fff;padding:10px 20px;border-radius:9999px;text-decoration:none;font-weight:600;font-size:13px">Share on LinkedIn</a>
-  <a href="https://www.reddit.com/submit?url=https://openclaw-finops.marywomack.workers.dev/demo&title=AI%20agents%20hallucinate%20cloud%20costs%20by%205-15x.%20This%20MCP%20tool%20fixes%20it." target="_blank" rel="noopener" style="background:#FF4500;color:#fff;padding:10px 20px;border-radius:9999px;text-decoration:none;font-weight:600;font-size:13px">Share on Reddit</a>
-  <a href="https://news.ycombinator.com/submitlink?u=https://openclaw-finops.marywomack.workers.dev/demo&t=OpenClaw%3A%20MCP%20tools%20that%20stop%20AI%20agents%20from%20hallucinating%20cloud%20costs" target="_blank" rel="noopener" style="background:#f97316;color:#000;padding:10px 20px;border-radius:9999px;text-decoration:none;font-weight:600;font-size:13px">Share on HN</a>
+  <a href="https://twitter.com/intent/tweet?text=AI%20agents%20hallucinate%20cloud%20costs%20by%205-15x.%20This%20open-source%20MCP%20tool%20fixes%20it.%20Free%20tier%2C%20MIT%20licensed.&url=https://integritypulse.marywomack.workers.dev/demo" target="_blank" rel="noopener" style="background:#1DA1F2;color:#fff;padding:10px 20px;border-radius:9999px;text-decoration:none;font-weight:600;font-size:13px">Share on X</a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://integritypulse.marywomack.workers.dev/demo" target="_blank" rel="noopener" style="background:#0A66C2;color:#fff;padding:10px 20px;border-radius:9999px;text-decoration:none;font-weight:600;font-size:13px">Share on LinkedIn</a>
+  <a href="https://www.reddit.com/submit?url=https://integritypulse.marywomack.workers.dev/demo&title=AI%20agents%20hallucinate%20cloud%20costs%20by%205-15x.%20This%20MCP%20tool%20fixes%20it." target="_blank" rel="noopener" style="background:#FF4500;color:#fff;padding:10px 20px;border-radius:9999px;text-decoration:none;font-weight:600;font-size:13px">Share on Reddit</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https://integritypulse.marywomack.workers.dev/demo&t=IntegrityPulse%3A%20MCP%20tools%20that%20stop%20AI%20agents%20from%20hallucinating%20cloud%20costs" target="_blank" rel="noopener" style="background:#f97316;color:#000;padding:10px 20px;border-radius:9999px;text-decoration:none;font-weight:600;font-size:13px">Share on HN</a>
 </div>
 
 <div class="cta-section">
   <h2>Stop hallucinations. Start shipping.</h2>
   <p>Free tier: 25 ops/month. No credit card. Set up in 30 seconds.</p>
-  <a href="https://github.com/maryadawson-code/openclaw-finops" class="btn">Get Free API Key</a>
+  <a href="https://github.com/maryadawson-code/integritypulse" class="btn">Get Free API Key</a>
   <a href="/try" class="btn btn-outline">Try It Live</a>
   <div class="install-box">
     <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.textContent);this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500)">Copy</button>
     <pre>{
   "mcpServers": {
-    "openclaw-finops": {
+    "integritypulse": {
       "type": "streamable-http",
-      "url": "https://openclaw-finops.marywomack.workers.dev/mcp",
+      "url": "https://integritypulse.marywomack.workers.dev/mcp",
       "headers": { "x-api-key": "YOUR_KEY" }
     }
   }
@@ -158,25 +158,25 @@ footer{text-align:center;padding:0 24px 32px;color:#555;font-size:.8rem}
   </div>
 
   <div style="margin-top:32px;max-width:520px;margin-left:auto;margin-right:auto">
-    <h3 style="color:#fff;font-size:1rem;margin-bottom:8px">Add "Powered by OpenClaw" to your project</h3>
+    <h3 style="color:#fff;font-size:1rem;margin-bottom:8px">Add "Powered by IntegrityPulse" to your project</h3>
     <p style="color:#888;font-size:.85rem;margin-bottom:12px">Show your team uses verified pricing. Copy this badge:</p>
     <div style="background:#111;border:1px solid #333;border-radius:8px;padding:12px;font-family:monospace;font-size:11px;color:#a6e3a1;position:relative">
       <button onclick="navigator.clipboard.writeText(this.nextElementSibling.textContent);this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500)" style="position:absolute;top:8px;right:8px;background:#333;border:1px solid #555;color:#ccc;padding:3px 8px;border-radius:4px;font-size:10px;cursor:pointer">Copy</button>
-      <code>[![OpenClaw FinOps](https://img.shields.io/badge/Verified%20Pricing-OpenClaw%20FinOps-f97316)](https://openclaw-finops.marywomack.workers.dev)</code>
+      <code>[![IntegrityPulse FinOps](https://img.shields.io/badge/Verified%20Pricing-IntegrityPulse%20FinOps-f97316)](https://integritypulse.marywomack.workers.dev)</code>
     </div>
   </div>
 </div>
 
 <footer>
-  OpenClaw Integrity Suite &mdash; MIT Licensed &mdash; Built by <a href="https://missionmeetstech.com" style="color:#f97316">Mission Meets Tech</a>
-  <p style="margin-top:8px"><a href="https://github.com/maryadawson-code/openclaw-finops" style="color:#f97316">GitHub</a> &middot; <a href="https://smithery.ai/server/maryadawson-code/finops" style="color:#f97316">Smithery</a> &middot; <a href="/llms.txt" style="color:#666">llms.txt</a> &middot; <a href="/.well-known/mcp" style="color:#666">MCP Discovery</a></p>
+  IntegrityPulse Integrity Suite &mdash; MIT Licensed &mdash; Built by <a href="https://missionmeetstech.com" style="color:#f97316">Mission Meets Tech</a>
+  <p style="margin-top:8px"><a href="https://github.com/maryadawson-code/integritypulse" style="color:#f97316">GitHub</a> &middot; <a href="https://smithery.ai/server/maryadawson-code/finops" style="color:#f97316">Smithery</a> &middot; <a href="/llms.txt" style="color:#666">llms.txt</a> &middot; <a href="/.well-known/mcp" style="color:#666">MCP Discovery</a></p>
 </footer>
 
 <script>
 const SCENES = [
   // Scene 0: FinOps
   {
-    title: "openclaw-finops",
+    title: "integritypulse",
     context: {
       problem: "LLMs are wrong about cloud pricing by 5\\u201315x. When agents deploy autonomously, hallucinated estimates become real invoices.",
       why: "One bad forecast can cost your team <strong style=\\"color:#f38ba8\\">$2,900/year</strong> in unexpected charges\\u2014per service. Multiply across 10 microservices and that\\'s a $29K budget surprise.",
@@ -184,7 +184,7 @@ const SCENES = [
     },
     messages: [
       {type:'user', text:'What would it cost to run our API on AWS with an m5.large, managed Postgres, and Redis?'},
-      {type:'bot', avatar:'fin', html:'<div class="tool-call"><div class="tool-label">Tool Call</div>forecast_deployment_cost<span class="badge badge-fin">openclaw-finops</span></div>'},
+      {type:'bot', avatar:'fin', html:'<div class="tool-call"><div class="tool-label">Tool Call</div>forecast_deployment_cost<span class="badge badge-fin">integritypulse</span></div>'},
       {type:'bot', avatar:'fin', html:'<div style="font-size:12px;color:#a6adc8;margin-bottom:8px">An LLM would estimate: <span class="hl">~$45/month</span>. Here\\'s the verified pricing:</div><table><tr><th>Service</th><th>Category</th><th>Hours</th><th class="cost-col">Cost</th></tr><tr class="anim-row"><td>m5.large</td><td>Compute</td><td>730</td><td class="cost-col">$70.08</td></tr><tr class="anim-row"><td>rds.postgres.db.m5.large</td><td>Database</td><td>730</td><td class="cost-col">$204.40</td></tr><tr class="anim-row"><td>elasticache.redis.t3.micro</td><td>Cache</td><td>730</td><td class="cost-col">$11.68</td></tr><tr class="anim-row total-row"><td colspan="3">Total Estimated Monthly Cost</td><td class="cost-col">$286.16</td></tr></table><div style="font-size:12px;color:#f38ba8;margin-top:4px"><strong>6.4x more</strong> than the LLM hallucinated. Annualized: <strong>$2,893 over budget</strong> if you trusted the agent\\'s estimate.</div>'},
     ]
   },
@@ -240,9 +240,9 @@ const SCENES = [
     },
     messages: [
       {type:'user', text:'What would it cost to run a t3.medium on AWS for a month?'},
-      {type:'bot', avatar:'fin', html:'<div class="tool-call"><div class="tool-label">Tool Call</div>forecast_deployment_cost<span class="badge badge-fin">openclaw-finops</span></div>'},
+      {type:'bot', avatar:'fin', html:'<div class="tool-call"><div class="tool-label">Tool Call</div>forecast_deployment_cost<span class="badge badge-fin">integritypulse</span></div>'},
       {type:'bot', avatar:'fin', html:'<div class="gate"><div class="gate-title">\\ud83d\\udd12 Free Tier Limit Reached</div><p>You\\'ve used 25/25 free operations this month.</p><p style="margin-top:8px;color:#cdd6f4">Upgrade to <strong style="color:#f97316">Pro ($29/mo)</strong> for 500 ops/month \\u2014 that\\'s <strong>$0.058 per forecast</strong>:</p><p style="margin-top:4px"><a href="#">\\u2192 Upgrade now</a></p></div><div style="font-size:11px;color:#6c7086;margin-top:8px;font-style:italic">This message was delivered inside the conversation via MCP\\'s isError:true flag \\u2014 not as an HTTP error that gets swallowed by the transport layer.</div>'},
-      {type:'bot', avatar:'fin', html:'<div style="font-size:12px;color:#a6adc8">This is <strong style="color:#f97316">Revenue-Gated MCP</strong> \\u2014 the monetization pattern for AI tool access. The upgrade prompt reaches the human through the agent\\'s conversation, exactly where intent lives.</div><div style="font-size:12px;color:#6c7086;margin-top:10px">\\u274c HTTP 402/429 \\u2192 agent swallows it, user never sees it, conversion lost<br>\\u2705 MCP isError:true \\u2192 agent surfaces it in chat, user acts immediately</div><div style="font-size:12px;margin-top:10px;color:#a6adc8">If you\\'re building MCP servers and need to monetize, this pattern is <a href="https://github.com/maryadawson-code/openclaw-finops" style="color:#f97316">open source and documented</a> for you to use.</div>'},
+      {type:'bot', avatar:'fin', html:'<div style="font-size:12px;color:#a6adc8">This is <strong style="color:#f97316">Revenue-Gated MCP</strong> \\u2014 the monetization pattern for AI tool access. The upgrade prompt reaches the human through the agent\\'s conversation, exactly where intent lives.</div><div style="font-size:12px;color:#6c7086;margin-top:10px">\\u274c HTTP 402/429 \\u2192 agent swallows it, user never sees it, conversion lost<br>\\u2705 MCP isError:true \\u2192 agent surfaces it in chat, user acts immediately</div><div style="font-size:12px;margin-top:10px;color:#a6adc8">If you\\'re building MCP servers and need to monetize, this pattern is <a href="https://github.com/maryadawson-code/integritypulse" style="color:#f97316">open source and documented</a> for you to use.</div>'},
     ]
   },
 ];

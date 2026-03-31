@@ -1,7 +1,7 @@
-# OpenClaw Launch Execution Plan
+# IntegrityPulse Launch Execution Plan
 
 **Created:** 2026-03-30
-**Goal:** Get OpenClaw in front of every vibe coder, AI agent builder, and FinOps practitioner within 7 days.
+**Goal:** Get IntegrityPulse in front of every vibe coder, AI agent builder, and FinOps practitioner within 7 days.
 
 ---
 
@@ -14,7 +14,7 @@ Every vibe coder hitting "deploy" with an AI agent faces four risks:
 3. **Security blindspots** — Agents generate Terraform with public S3 buckets and open SSH without warning.
 4. **Ghost costs** — Idle NAT gateways ($32/mo), oversized instances ($4,608/mo for a simple API) slip through unnoticed.
 
-OpenClaw is the integrity layer that catches all four — before `terraform apply`.
+IntegrityPulse is the integrity layer that catches all four — before `terraform apply`.
 
 ---
 
@@ -33,8 +33,8 @@ Ensure these topics are set on the repo for search discoverability:
 `vibe-coding` `cloud-cost` `terraform` `infrastructure-as-code`
 
 ### 1.3 Fix README Self-Hosting URL
-Update `git clone https://github.com/yourusername/openclaw-finops.git` to use the real URL:
-`git clone https://github.com/maryadawson-code/openclaw-finops.git`
+Update `git clone https://github.com/yourusername/integritypulse.git` to use the real URL:
+`git clone https://github.com/maryadawson-code/integritypulse.git`
 
 ---
 
@@ -44,11 +44,11 @@ Submit to every MCP directory. These are the app stores for AI tools — this is
 
 | Registry | Action | Config File Ready? |
 |----------|--------|-----------|
-| **Smithery.ai** | Submit at https://smithery.ai/submit or `npx @smithery/cli publish openclaw-finops` | Yes — `smithery.yaml` |
+| **Smithery.ai** | Submit at https://smithery.ai/submit or `npx @smithery/cli publish integritypulse` | Yes — `smithery.yaml` |
 | **Glama.ai** | Submit at https://glama.ai/mcp/servers/submit with repo URL | Yes — `mcp-server.json` |
 | **PulseMCP** | Submit server URL at https://pulsemcp.com/submit | Yes — `/.well-known/mcp` |
 | **MCP.so** | Submit at https://mcp.so/submit (Category: DevOps/FinOps) | Manual entry |
-| **Anthropic Skills** | Fork anthropics/skills, add `skills/openclaw-finops/`, open PR | Yes — `skills/` dir ready |
+| **Anthropic Skills** | Fork anthropics/skills, add `skills/integritypulse/`, open PR | Yes — `skills/` dir ready |
 
 **Priority order:** Smithery > Glama > MCP.so > PulseMCP > Anthropic Skills
 
@@ -110,7 +110,7 @@ Write a technical article: **"Revenue-Gated MCP: How to Monetize AI Tool Access 
 
 ### 5.2 FinOps Foundation
 - The FinOps Foundation (finops.org) tracks tools in the space
-- Submit OpenClaw for their landscape/tool directory
+- Submit IntegrityPulse for their landscape/tool directory
 - This legitimizes the project for enterprise buyers
 
 ### 5.3 Cloud Cost Newsletter/Podcast Circuit
@@ -123,7 +123,7 @@ Write a technical article: **"Revenue-Gated MCP: How to Monetize AI Tool Access 
 ## Phase 6: Ongoing Growth Engine
 
 ### 6.1 Content Flywheel
-- Weekly tweet showing a real pricing hallucination caught by OpenClaw
+- Weekly tweet showing a real pricing hallucination caught by IntegrityPulse
 - Monthly blog post on the Revenue Gate pattern, new services added, etc.
 - GitHub Discussions enabled for community Q&A
 

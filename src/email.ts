@@ -19,7 +19,7 @@ function buildProWelcomeHtml(data: WelcomeEmailData): string {
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head>
 <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #1a1a1a;">
 
-<h1 style="font-size: 24px; margin-bottom: 4px;">Welcome to OpenClaw FinOps Pro</h1>
+<h1 style="font-size: 24px; margin-bottom: 4px;">Welcome to IntegrityPulse FinOps Pro</h1>
 <p style="color: #666; margin-top: 0;">Your cloud cost forecasts are now unlimited.</p>
 
 <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 24px 0;">
@@ -35,9 +35,9 @@ ${data.apiKey}
 <p>Open <code>~/Library/Application Support/Claude/claude_desktop_config.json</code> and add:</p>
 <pre style="background: #f5f5f5; padding: 12px; border-radius: 6px; font-size: 13px; overflow-x: auto;">{
   "mcpServers": {
-    "openclaw-finops": {
+    "integritypulse": {
       "type": "streamable-http",
-      "url": "https://openclaw-finops.marywomack.workers.dev/mcp",
+      "url": "https://integritypulse.marywomack.workers.dev/mcp",
       "headers": { "x-api-key": "${data.apiKey}" }
     }
   }
@@ -46,17 +46,17 @@ ${data.apiKey}
 <h3 style="font-size: 15px; color: #333;">Cursor</h3>
 <p>Go to <strong>Settings → Models → MCP</strong>, click <strong>Add Server</strong>, then paste:</p>
 <pre style="background: #f5f5f5; padding: 12px; border-radius: 6px; font-size: 13px; overflow-x: auto;">{
-  "openclaw-finops": {
+  "integritypulse": {
     "type": "streamable-http",
-    "url": "https://openclaw-finops.marywomack.workers.dev/mcp",
+    "url": "https://integritypulse.marywomack.workers.dev/mcp",
     "headers": { "x-api-key": "${data.apiKey}" }
   }
 }</pre>
 
 <h3 style="font-size: 15px; color: #333;">Claude Code (CLI)</h3>
-<pre style="background: #f5f5f5; padding: 12px; border-radius: 6px; font-size: 13px;">claude mcp add openclaw-finops \\
+<pre style="background: #f5f5f5; padding: 12px; border-radius: 6px; font-size: 13px;">claude mcp add integritypulse \\
   --transport http \\
-  https://openclaw-finops.marywomack.workers.dev/mcp \\
+  https://integritypulse.marywomack.workers.dev/mcp \\
   --header "x-api-key: ${data.apiKey}"</pre>
 
 <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 24px 0;">
@@ -66,7 +66,7 @@ ${data.apiKey}
 <p>When someone includes your code in their <code>x-referral-code</code> header, you both get +5 free operations. Even on Pro, referrals expand your network — referred users get a better free experience and are more likely to upgrade.</p>
 
 <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 24px 0;">
-<p style="color: #999; font-size: 13px;">OpenClaw FinOps — Verified cloud pricing for AI agents.<br>
+<p style="color: #999; font-size: 13px;">IntegrityPulse FinOps — Verified cloud pricing for AI agents.<br>
 Questions? Reply to this email.</p>
 
 </body>
@@ -78,7 +78,7 @@ export async function sendProWelcomeEmail(
   resendApiKey?: string
 ): Promise<{ sent: boolean; method: string }> {
   const html = buildProWelcomeHtml(data);
-  const subject = "Welcome to OpenClaw FinOps Pro — your key is inside";
+  const subject = "Welcome to IntegrityPulse FinOps Pro — your key is inside";
 
   // Production: send via Resend
   if (resendApiKey) {
@@ -89,7 +89,7 @@ export async function sendProWelcomeEmail(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "OpenClaw FinOps <noreply@openclaw.com>",
+        from: "IntegrityPulse FinOps <noreply@openclaw.com>",
         to: [data.to],
         subject,
         html,

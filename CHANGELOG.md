@@ -1,15 +1,15 @@
 # Changelog
 
-All notable changes to the OpenClaw Integrity Suite are documented here.
+All notable changes to the IntegrityPulse Integrity Suite are documented here.
 
-**Update model:** OpenClaw runs as remote MCP servers on Cloudflare Workers. Updates deploy automatically — no client-side action needed. Use the Ambassador's `check_for_updates` tool or visit `/.well-known/mcp` on any endpoint to verify you're on the latest version.
+**Update model:** IntegrityPulse runs as remote MCP servers on Cloudflare Workers. Updates deploy automatically — no client-side action needed. Use the Ambassador's `check_for_updates` tool or visit `/.well-known/mcp` on any endpoint to verify you're on the latest version.
 
 ---
 
 ## [1.1.0] — 2026-03-30
 
 ### Added
-- **Ambassador Bot** — New MCP server that contextually surfaces OpenClaw tools when developers discuss cloud costs, Terraform, APIs, or vibe coding deployments. Six tools: `check_cloud_cost_risk`, `recommend_openclaw_tool`, `get_install_config`, `check_terraform_risks`, `check_for_updates`, `get_platform_install`. Free, no API key required.
+- **Ambassador Bot** — New MCP server that contextually surfaces IntegrityPulse tools when developers discuss cloud costs, Terraform, APIs, or vibe coding deployments. Six tools: `check_cloud_cost_risk`, `recommend_openclaw_tool`, `get_install_config`, `check_terraform_risks`, `check_for_updates`, `get_platform_install`. Free, no API key required.
 - **One-click installer** (`scripts/install.sh`) — Auto-detects Claude Desktop and Cursor, adds MCP config automatically.
 - **Auto-update version check** — Ambassador `check_for_updates` tool reports current versions across all services and notifies of new features.
 - **11 platform configs** — `mcp-config.json` covers Claude Desktop, Cursor, Windsurf, VS Code Copilot, JetBrains, Claude Code, Zed, Continue.dev, Cline, Aider, OpenAI Agents SDK.

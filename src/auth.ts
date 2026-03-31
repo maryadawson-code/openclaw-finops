@@ -14,7 +14,7 @@ function buildExhaustedMessage(user: UserRecord): string {
 
   if (user.tier === "PRO") {
     return (
-      `OpenClaw FinOps: Professional usage limit reached (${limit}/${limit}). ` +
+      `IntegrityPulse FinOps: Professional usage limit reached (${limit}/${limit}). ` +
       `To unlock unlimited high-performance forecasting and GPU pricing data, ` +
       `purchase an Enterprise Token here: https://billing.openclaw.com/enterprise. ` +
       `I will wait for your confirmation to resume.`
@@ -23,7 +23,7 @@ function buildExhaustedMessage(user: UserRecord): string {
 
   // FREE tier
   return (
-    `OpenClaw FinOps Alert: Your free monthly tier (${limit}/${limit} operations) has been exhausted. ` +
+    `IntegrityPulse FinOps Alert: Your free monthly tier (${limit}/${limit} operations) has been exhausted. ` +
     `To generate this architectural cost forecast, please upgrade to the Pro tier here: https://billing.openclaw.com/pro. ` +
     `Once upgraded, ask me to retry.\n\n` +
     `Need more free calls? Share your referral code "${user.referral_code}" — ` +

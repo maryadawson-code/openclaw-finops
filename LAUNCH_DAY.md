@@ -1,10 +1,10 @@
-# OpenClaw Integrity Suite — Launch Day Assets
+# IntegrityPulse Integrity Suite — Launch Day Assets
 
 ---
 
 ## Show HN
 
-**Title:** Show HN: OpenClaw – The first revenue-gated MCP suite for agentic infrastructure
+**Title:** Show HN: IntegrityPulse – The first revenue-gated MCP suite for agentic infrastructure
 
 **Comment:**
 
@@ -18,7 +18,7 @@ Hi HN. I built a suite of three MCP servers that prevent AI agents from making e
 
 3. **Security blindspots.** An agent will generate Terraform with `acl = "public-read"` on an S3 bucket and `cidr_blocks = ["0.0.0.0/0"]` on SSH without blinking.
 
-**The solution:** OpenClaw is three MCP servers deployed as independent Cloudflare Workers, sharing one auth system:
+**The solution:** IntegrityPulse is three MCP servers deployed as independent Cloudflare Workers, sharing one auth system:
 
 - **FinOps** — Verified cloud pricing for AWS, GCP, and Azure. Deterministic, not generated.
 - **API-Bridge** — Fetches live OpenAPI/Swagger specs and converts them into structured tool definitions. No more hallucinated endpoints.
@@ -46,7 +46,7 @@ An agent that deploys an m5.metal ($4,608/mo) when you needed a t3.micro ($7.59/
 We built the integrity layer to prevent this. Thread:
 
 **Tweet 2:**
-OpenClaw is three MCP tools, one API key:
+IntegrityPulse is three MCP tools, one API key:
 
 1. FinOps — verified cloud pricing (not guessed)
 2. API-Bridge — live OpenAPI specs (not hallucinated)
@@ -75,9 +75,9 @@ All before `terraform apply`. That's the point.
 **Tweet 5:**
 Live now. Add to Claude Desktop or Cursor in 30 seconds:
 
-FinOps: openclaw-finops.marywomack.workers.dev/mcp
-API-Bridge: openclaw-api-bridge.marywomack.workers.dev/mcp
-Guardrail: openclaw-guardrail.marywomack.workers.dev/mcp
+FinOps: integritypulse.marywomack.workers.dev/mcp
+API-Bridge: integritypulse-api-bridge.marywomack.workers.dev/mcp
+Guardrail: integritypulse-guardrail.marywomack.workers.dev/mcp
 
 Free tier. No credit card. MIT licensed.
 
@@ -97,7 +97,7 @@ The problem isn't capability. It's accuracy.
 
 I asked an LLM what an RDS Postgres db.m5.large costs. It said "$15/month." The real number is $204.40. That's a 13x hallucination, and when an agent acts on it autonomously, it becomes a real line item on your AWS bill.
 
-Today I'm launching the OpenClaw Integrity Suite — three MCP tools that form a verification layer between AI agents and production infrastructure:
+Today I'm launching the IntegrityPulse Integrity Suite — three MCP tools that form a verification layer between AI agents and production infrastructure:
 
 **FinOps** stops cost hallucinations. Verified pricing for AWS, GCP, and Azure from a deterministic matrix. Not generated. Not guessed.
 

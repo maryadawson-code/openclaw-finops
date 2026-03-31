@@ -1,7 +1,7 @@
 {
-  "name": "@openclaw/core",
+  "name": "@integritypulse/core",
   "version": "1.0.0",
-  "description": "Shared auth, billing, and database logic for all OpenClaw MCP servers",
+  "description": "Shared auth, billing, and database logic for all IntegrityPulse MCP servers",
   "type": "module",
   "main": "src/index.ts",
   "types": "src/index.ts",

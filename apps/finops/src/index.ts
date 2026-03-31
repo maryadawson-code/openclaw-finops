@@ -6,7 +6,7 @@ import {
   extractApiKey,
   extractReferralCode,
   handleStripeWebhook,
-} from "@openclaw/core";
+} from "@integritypulse/core";
 import { createMcpServer } from "./mcp-server.js";
 import { LLMS_TXT, LLMS_FULL_TXT } from "./llms-txt.js";
 import { DEMO_HTML } from "./demo-html.js";
@@ -30,18 +30,18 @@ app.get("/", (c) => {
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>OpenClaw FinOps — Verified Cloud Pricing for AI Agents</title>
+<title>IntegrityPulse FinOps — Verified Cloud Pricing for AI Agents</title>
 <meta name="description" content="Stop AI agents from hallucinating cloud costs. Verified pricing for AWS, GCP, and Azure via MCP. Free tier: 25 ops/month.">
-<meta property="og:title" content="OpenClaw FinOps — Verified Cloud Pricing for AI Agents">
-<meta property="og:description" content="LLMs say RDS costs $15/mo. Real price: $204. OpenClaw gives AI agents verified pricing for AWS, GCP, and Azure. Free tier available.">
+<meta property="og:title" content="IntegrityPulse FinOps — Verified Cloud Pricing for AI Agents">
+<meta property="og:description" content="LLMs say RDS costs $15/mo. Real price: $204. IntegrityPulse gives AI agents verified pricing for AWS, GCP, and Azure. Free tier available.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://openclaw-finops.marywomack.workers.dev">
+<meta property="og:url" content="https://integritypulse.marywomack.workers.dev">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="OpenClaw FinOps — Stop AI Cost Hallucinations">
-<meta name="twitter:description" content="AI agents are wrong about cloud pricing by 5-15x. OpenClaw returns verified costs for AWS, GCP, Azure via MCP.">
-<link rel="canonical" href="https://openclaw-finops.marywomack.workers.dev">
+<meta name="twitter:title" content="IntegrityPulse FinOps — Stop AI Cost Hallucinations">
+<meta name="twitter:description" content="AI agents are wrong about cloud pricing by 5-15x. IntegrityPulse returns verified costs for AWS, GCP, Azure via MCP.">
+<link rel="canonical" href="https://integritypulse.marywomack.workers.dev">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"SoftwareApplication","name":"OpenClaw FinOps","applicationCategory":"DeveloperApplication","operatingSystem":"Cloud","description":"Revenue-gated MCP server for AI cloud cost forecasting. Verified pricing for AWS, GCP, and Azure. Prevents LLM cost hallucinations.","url":"https://openclaw-finops.marywomack.workers.dev","offers":[{"@type":"Offer","name":"Free","price":"0","priceCurrency":"USD","description":"25 operations per month"},{"@type":"Offer","name":"Pro","price":"29","priceCurrency":"USD","description":"500 operations per month"},{"@type":"Offer","name":"Team","price":"99","priceCurrency":"USD","description":"2000 operations per month"},{"@type":"Offer","name":"Enterprise","price":"499","priceCurrency":"USD","description":"50000 operations per month"}],"author":{"@type":"Organization","name":"Mission Meets Tech","url":"https://missionmeetstech.com"},"codeRepository":"https://github.com/maryadawson-code/openclaw-finops","license":"https://opensource.org/licenses/MIT","keywords":"MCP,FinOps,cloud pricing,AI agents,AWS,GCP,Azure,cost forecasting,Model Context Protocol"}
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"IntegrityPulse FinOps","applicationCategory":"DeveloperApplication","operatingSystem":"Cloud","description":"Revenue-gated MCP server for AI cloud cost forecasting. Verified pricing for AWS, GCP, and Azure. Prevents LLM cost hallucinations.","url":"https://integritypulse.marywomack.workers.dev","offers":[{"@type":"Offer","name":"Free","price":"0","priceCurrency":"USD","description":"25 operations per month"},{"@type":"Offer","name":"Pro","price":"29","priceCurrency":"USD","description":"500 operations per month"},{"@type":"Offer","name":"Team","price":"99","priceCurrency":"USD","description":"2000 operations per month"},{"@type":"Offer","name":"Enterprise","price":"499","priceCurrency":"USD","description":"50000 operations per month"}],"author":{"@type":"Organization","name":"Mission Meets Tech","url":"https://missionmeetstech.com"},"codeRepository":"https://github.com/maryadawson-code/integritypulse","license":"https://opensource.org/licenses/MIT","keywords":"MCP,FinOps,cloud pricing,AI agents,AWS,GCP,Azure,cost forecasting,Model Context Protocol"}
 </script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -74,12 +74,12 @@ footer{text-align:center;color:#666;font-size:.85rem;margin-top:48px;padding-top
 </head>
 <body>
 <div class="container">
-<h1>OpenClaw FinOps</h1>
+<h1>IntegrityPulse FinOps</h1>
 <p class="tagline">Verified cloud pricing for AI agents. Stop hallucinated cost estimates.</p>
 
 <div class="shock">
 <div class="shock-num">$15 vs $204</div>
-<p>What an LLM says RDS costs vs. the real price. A <strong>13x error</strong> that becomes a real invoice when agents deploy autonomously. OpenClaw returns the real number.</p>
+<p>What an LLM says RDS costs vs. the real price. A <strong>13x error</strong> that becomes a real invoice when agents deploy autonomously. IntegrityPulse returns the real number.</p>
 </div>
 
 <div class="section">
@@ -92,9 +92,9 @@ footer{text-align:center;color:#666;font-size:.85rem;margin-top:48px;padding-top
 <p>Add to Claude Desktop, Cursor, or any MCP client:</p>
 <div class="code-block"><pre>{
   "mcpServers": {
-    "openclaw-finops": {
+    "integritypulse": {
       "type": "streamable-http",
-      "url": "https://openclaw-finops.marywomack.workers.dev/mcp",
+      "url": "https://integritypulse.marywomack.workers.dev/mcp",
       "headers": { "x-api-key": "YOUR_KEY" }
     }
   }
@@ -123,7 +123,7 @@ footer{text-align:center;color:#666;font-size:.85rem;margin-top:48px;padding-top
 </div>
 
 <div class="section">
-<h2>The OpenClaw Integrity Suite</h2>
+<h2>The IntegrityPulse Integrity Suite</h2>
 <table>
 <tr><th>Server</th><th>What It Stops</th></tr>
 <tr><td><strong>FinOps</strong></td><td>Cost hallucinations — verified pricing matrix</td></tr>
@@ -134,13 +134,13 @@ footer{text-align:center;color:#666;font-size:.85rem;margin-top:48px;padding-top
 </div>
 
 <div style="display:flex;justify-content:center;gap:8px;margin:24px 0;flex-wrap:wrap">
-<a href="https://twitter.com/intent/tweet?text=AI%20agents%20hallucinate%20cloud%20costs%20by%205-15x.%20This%20open-source%20MCP%20tool%20fixes%20it.&url=https://openclaw-finops.marywomack.workers.dev" target="_blank" style="background:#1DA1F2;color:#fff;padding:9px 18px;border-radius:9999px;text-decoration:none;font-weight:600;font-size:12px">Share on X</a>
-<a href="https://www.linkedin.com/sharing/share-offsite/?url=https://openclaw-finops.marywomack.workers.dev" target="_blank" style="background:#0A66C2;color:#fff;padding:9px 18px;border-radius:9999px;text-decoration:none;font-weight:600;font-size:12px">Share on LinkedIn</a>
-<a href="https://www.reddit.com/submit?url=https://openclaw-finops.marywomack.workers.dev&title=Open-source%20MCP%20tool%20that%20stops%20AI%20agents%20from%20hallucinating%20cloud%20costs" target="_blank" style="background:#FF4500;color:#fff;padding:9px 18px;border-radius:9999px;text-decoration:none;font-weight:600;font-size:12px">Share on Reddit</a>
+<a href="https://twitter.com/intent/tweet?text=AI%20agents%20hallucinate%20cloud%20costs%20by%205-15x.%20This%20open-source%20MCP%20tool%20fixes%20it.&url=https://integritypulse.marywomack.workers.dev" target="_blank" style="background:#1DA1F2;color:#fff;padding:9px 18px;border-radius:9999px;text-decoration:none;font-weight:600;font-size:12px">Share on X</a>
+<a href="https://www.linkedin.com/sharing/share-offsite/?url=https://integritypulse.marywomack.workers.dev" target="_blank" style="background:#0A66C2;color:#fff;padding:9px 18px;border-radius:9999px;text-decoration:none;font-weight:600;font-size:12px">Share on LinkedIn</a>
+<a href="https://www.reddit.com/submit?url=https://integritypulse.marywomack.workers.dev&title=Open-source%20MCP%20tool%20that%20stops%20AI%20agents%20from%20hallucinating%20cloud%20costs" target="_blank" style="background:#FF4500;color:#fff;padding:9px 18px;border-radius:9999px;text-decoration:none;font-weight:600;font-size:12px">Share on Reddit</a>
 </div>
 
 <div style="text-align:center;margin:32px 0">
-<a href="https://github.com/maryadawson-code/openclaw-finops" class="btn">GitHub</a>
+<a href="https://github.com/maryadawson-code/integritypulse" class="btn">GitHub</a>
 <a href="/demo" class="btn btn-outline">Watch Demo</a>
 <a href="https://smithery.ai/server/maryadawson-code/finops" class="btn btn-outline">Smithery</a>
 </div>
@@ -162,7 +162,7 @@ footer{text-align:center;color:#666;font-size:.85rem;margin-top:48px;padding-top
     v=c.variant.id;
     var h=document.querySelector('h1');
     var p=document.querySelector('.tagline');
-    if(h)h.textContent='OpenClaw FinOps';
+    if(h)h.textContent='IntegrityPulse FinOps';
     if(h)h.innerHTML=c.variant.headline;
     if(p)p.textContent=c.variant.sub;
     fetch('/g/event',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:'page_view',page:'/',variant:v})});
@@ -182,7 +182,7 @@ footer{text-align:center;color:#666;font-size:.85rem;margin-top:48px;padding-top
 })();
 </script>
 <footer>
-<p>OpenClaw FinOps — MIT Licensed. Built by <a href="https://missionmeetstech.com">Mission Meets Tech</a>.</p>
+<p>IntegrityPulse FinOps — MIT Licensed. Built by <a href="https://missionmeetstech.com">Mission Meets Tech</a>.</p>
 <p style="margin-top:8px"><a href="/.well-known/mcp">MCP Discovery</a> · <a href="/llms.txt">llms.txt</a> · <a href="/.well-known/agent.json">Agent Card</a> · <a href="/demo">Demo</a></p>
 </footer>
 </div>
@@ -194,7 +194,7 @@ footer{text-align:center;color:#666;font-size:.85rem;margin-top:48px;padding-top
 // ---------------------------------------------------------------------------
 // Health check (JSON)
 // ---------------------------------------------------------------------------
-app.get("/health", (c) => c.json({ status: "ok", service: "openclaw-finops", suite: "openclaw" }));
+app.get("/health", (c) => c.json({ status: "ok", service: "integritypulse", suite: "openclaw" }));
 
 // ---------------------------------------------------------------------------
 // /demo — Animated product demo (shareable, auto-plays)
@@ -209,7 +209,7 @@ app.get("/try", (c) => {
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Try OpenClaw FinOps — Free Cloud Cost Forecast</title>
+<title>Try IntegrityPulse FinOps — Free Cloud Cost Forecast</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0a;color:#e0e0e0;line-height:1.6}
@@ -237,7 +237,7 @@ select{cursor:pointer}
 </head>
 <body>
 <div class="container">
-<a href="/" class="back">&larr; Back to OpenClaw FinOps</a>
+<a href="/" class="back">&larr; Back to IntegrityPulse FinOps</a>
 <h1 style="margin-top:16px">Try It Free</h1>
 <p class="sub">Get a real cloud cost forecast. No API key. No signup.</p>
 
@@ -268,7 +268,7 @@ select{cursor:pointer}
 </div>
 <div class="cta" id="cta">
 <p>Want unlimited forecasts inside your AI agent?</p>
-<p style="margin-top:8px"><a href="https://github.com/maryadawson-code/openclaw-finops">Get your free API key</a> — 25 ops/month, no credit card.</p>
+<p style="margin-top:8px"><a href="https://github.com/maryadawson-code/integritypulse">Get your free API key</a> — 25 ops/month, no credit card.</p>
 </div>
 </div>
 <script>
@@ -286,11 +286,11 @@ try{const res=await fetch('/try',{method:'POST',headers:{'Content-Type':'applica
 const data=await res.json();document.getElementById('result').style.display='block';document.getElementById('result').textContent=data.forecast||data.error||JSON.stringify(data,null,2);
 document.getElementById('cta').style.display='block';
 var sb=document.getElementById('shareBar');sb.style.display='flex';
-var msg=encodeURIComponent('Just ran a cloud cost forecast with OpenClaw FinOps. LLMs guess $45/mo - real price: $286. Try it free:');
-var url=encodeURIComponent('https://openclaw-finops.marywomack.workers.dev/try');
+var msg=encodeURIComponent('Just ran a cloud cost forecast with IntegrityPulse FinOps. LLMs guess $45/mo - real price: $286. Try it free:');
+var url=encodeURIComponent('https://integritypulse.marywomack.workers.dev/try');
 document.getElementById('shareX').href='https://twitter.com/intent/tweet?text='+msg+'&url='+url;
 document.getElementById('shareLI').href='https://www.linkedin.com/sharing/share-offsite/?url='+url;
-document.getElementById('shareR').href='https://www.reddit.com/submit?url='+encodeURIComponent('https://openclaw-finops.marywomack.workers.dev/try')+'&title='+msg;
+document.getElementById('shareR').href='https://www.reddit.com/submit?url='+encodeURIComponent('https://integritypulse.marywomack.workers.dev/try')+'&title='+msg;
 }catch(e){document.getElementById('result').style.display='block';document.getElementById('result').textContent='Error: '+e.message}
 btn.disabled=false;btn.textContent='Get Forecast'}
 </script>
@@ -419,7 +419,7 @@ Allow: /
 User-agent: Bytespider
 Allow: /
 
-Sitemap: https://openclaw-finops.marywomack.workers.dev/sitemap.xml
+Sitemap: https://integritypulse.marywomack.workers.dev/sitemap.xml
 `));
 
 // ---------------------------------------------------------------------------
@@ -429,13 +429,13 @@ app.get("/sitemap.xml", (c) => {
   c.header("Content-Type", "application/xml");
   return c.body(`<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://openclaw-finops.marywomack.workers.dev/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://openclaw-finops.marywomack.workers.dev/demo</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://openclaw-finops.marywomack.workers.dev/try</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://openclaw-finops.marywomack.workers.dev/llms.txt</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://openclaw-finops.marywomack.workers.dev/llms-full.txt</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://openclaw-finops.marywomack.workers.dev/.well-known/mcp</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://openclaw-finops.marywomack.workers.dev/.well-known/agent.json</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://integritypulse.marywomack.workers.dev/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://integritypulse.marywomack.workers.dev/demo</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://integritypulse.marywomack.workers.dev/try</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://integritypulse.marywomack.workers.dev/llms.txt</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://integritypulse.marywomack.workers.dev/llms-full.txt</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://integritypulse.marywomack.workers.dev/.well-known/mcp</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://integritypulse.marywomack.workers.dev/.well-known/agent.json</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 </urlset>`);
 });
 
@@ -451,13 +451,13 @@ app.get("/llms-full.txt", (c) => c.text(LLMS_FULL_TXT));
 app.get("/.well-known/mcp", (c) => {
   return c.json({
     "mcp-version": "1.0.0",
-    name: "OpenClaw-FinOps",
+    name: "IntegrityPulse-FinOps",
     version: "1.0.0",
     description:
       "Real-time cloud cost forecasting with a built-in Revenue Gate for agentic workflows.",
     transport: {
       type: "https",
-      url: "https://openclaw-finops.marywomack.workers.dev/mcp",
+      url: "https://integritypulse.marywomack.workers.dev/mcp",
     },
     capabilities: { tools: ["forecast_deployment_cost"] },
     auth: { type: "apiKey", header: "x-api-key" },
@@ -469,7 +469,7 @@ app.get("/.well-known/mcp", (c) => {
 // ---------------------------------------------------------------------------
 app.get("/.well-known/mcp/server-card.json", (c) => {
   return c.json({
-    name: "OpenClaw FinOps",
+    name: "IntegrityPulse FinOps",
     description: "Cloud deployment cost forecasting for AI agents. Returns verified, line-item pricing for AWS, GCP, and Azure directly inside agent conversations. Free tier includes 25 operations/month.",
     version: "1.0.0",
     tools: [
@@ -510,10 +510,10 @@ app.get("/.well-known/mcp/server-card.json", (c) => {
 // ---------------------------------------------------------------------------
 app.get("/.well-known/agent.json", (c) => {
   return c.json({
-    name: "OpenClaw Integrity Suite",
+    name: "IntegrityPulse Integrity Suite",
     description:
       "Three-tool suite for AI agents: verified cloud pricing (FinOps), live API spec parsing (API-Bridge), and infrastructure security scanning (Guardrail).",
-    url: "https://openclaw-finops.marywomack.workers.dev",
+    url: "https://integritypulse.marywomack.workers.dev",
     version: "1.0.0",
     capabilities: { streaming: false, pushNotifications: false },
     authentication: { schemes: ["apiKey"], credentials: null },
@@ -552,9 +552,9 @@ app.get("/.well-known/ai", (c) => {
   return c.json({
     aiendpoint: "1.0",
     service: {
-      name: "OpenClaw Suite",
+      name: "IntegrityPulse Suite",
       description:
-        "OpenClaw Integrity Suite. Four tools: FinOps (verified cloud pricing), API-Bridge (live OpenAPI spec parsing), Guardrail (IaC security scanning), Fortress (zero-trust live state verification). One API key, tiered billing.",
+        "IntegrityPulse Integrity Suite. Four tools: FinOps (verified cloud pricing), API-Bridge (live OpenAPI spec parsing), Guardrail (IaC security scanning), Fortress (zero-trust live state verification). One API key, tiered billing.",
       category: ["finance", "developer"],
       language: ["en"],
     },
@@ -562,7 +562,7 @@ app.get("/.well-known/ai", (c) => {
       {
         id: "forecast_deployment_cost",
         description: "Estimate monthly cloud infrastructure cost with a line-item breakdown.",
-        endpoint: "https://openclaw-finops.marywomack.workers.dev/mcp",
+        endpoint: "https://integritypulse.marywomack.workers.dev/mcp",
         method: "POST",
         params: {
           provider: "string, required -- AWS|GCP|AZURE",
@@ -573,7 +573,7 @@ app.get("/.well-known/ai", (c) => {
       {
         id: "bridge_api_spec",
         description: "Fetch an OpenAPI/Swagger spec and parse it into structured endpoint definitions. Stops AI hallucination by grounding API usage in live specifications.",
-        endpoint: "https://openclaw-api-bridge.marywomack.workers.dev/mcp",
+        endpoint: "https://integritypulse-api-bridge.marywomack.workers.dev/mcp",
         method: "POST",
         params: {
           openapi_url: "string, required -- URL of the OpenAPI/Swagger spec (JSON or YAML)",
@@ -583,7 +583,7 @@ app.get("/.well-known/ai", (c) => {
       {
         id: "audit_infrastructure_code",
         description: "Enterprise security scanner. Audits Terraform/CloudFormation/Pulumi for vulnerabilities (public buckets, open ports, wildcard IAM) and ghost costs (idle NAT gateways, oversized instances).",
-        endpoint: "https://openclaw-guardrail.marywomack.workers.dev/mcp",
+        endpoint: "https://integritypulse-guardrail.marywomack.workers.dev/mcp",
         method: "POST",
         params: {
           code_content: "string, required -- infrastructure code to audit",
@@ -595,7 +595,7 @@ app.get("/.well-known/ai", (c) => {
       {
         id: "verify_live_state",
         description: "Zero-trust live state verification. Fetches a URL with optional cache-busting, reports cache vs origin status, and validates DOM signatures.",
-        endpoint: "https://openclaw-fortress.marywomack.workers.dev/mcp",
+        endpoint: "https://integritypulse-fortress.marywomack.workers.dev/mcp",
         method: "POST",
         params: {
           target_url: "string, required -- URL to verify",
@@ -685,7 +685,7 @@ app.post("/mcp", async (c) => {
 });
 
 // ---------------------------------------------------------------------------
-// Stripe webhook — shared handler from @openclaw/core
+// Stripe webhook — shared handler from @integritypulse/core
 // ---------------------------------------------------------------------------
 app.post("/api/webhook/stripe", async (c) => {
   const sig = c.req.header("stripe-signature");

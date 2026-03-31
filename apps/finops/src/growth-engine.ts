@@ -6,7 +6,7 @@
  * Adapts: reweights A/B variants hourly, reorders share buttons by performance.
  */
 
-import { getSupabaseClient } from "@openclaw/core";
+import { getSupabaseClient } from "@integritypulse/core";
 
 interface GrowthConfig {
   hero_variants: HeroVariant[];

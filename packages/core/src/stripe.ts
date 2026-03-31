@@ -20,7 +20,7 @@ export interface StripeEnv {
 }
 
 /**
- * Resolve a Stripe Price ID to an OpenClaw tier.
+ * Resolve a Stripe Price ID to an IntegrityPulse tier.
  * Checks session metadata first, then line items.
  */
 function resolveTier(priceId?: string): "PRO" | "TEAM" | "ENTERPRISE" {
@@ -31,7 +31,7 @@ function resolveTier(priceId?: string): "PRO" | "TEAM" | "ENTERPRISE" {
 }
 
 /**
- * Shared Stripe webhook handler for all OpenClaw servers.
+ * Shared Stripe webhook handler for all IntegrityPulse servers.
  */
 export async function handleStripeWebhook(
   rawBody: string,

@@ -7,11 +7,11 @@ import {
   extractReferralCode,
   handleStripeWebhook,
   TIER_RANK,
-} from "@openclaw/core";
+} from "@integritypulse/core";
 import { createFortressServer } from "./mcp-server.js";
 
 const TEAM_GATE_MESSAGE =
-  "OpenClaw Fortress Core requires a TEAM subscription ($99/mo). " +
+  "IntegrityPulse Fortress Core requires a TEAM subscription ($99/mo). " +
   "Upgrade to prevent AI deployment drift: https://billing.openclaw.com/team";
 
 // The Fortress no longer has a single Enterprise gate at the /mcp level.
@@ -38,13 +38,13 @@ app.get("/", (c) =>
 app.get("/.well-known/mcp", (c) => {
   return c.json({
     "mcp-version": "1.0.0",
-    name: "OpenClaw-Fortress",
+    name: "IntegrityPulse-Fortress",
     version: "1.0.0",
     description:
       "Zero-trust live state verification. Fetches URLs with cache-busting, inspects HTTP headers, and validates DOM signatures.",
     transport: {
       type: "https",
-      url: "https://openclaw-fortress.marywomack.workers.dev/mcp",
+      url: "https://integritypulse-fortress.marywomack.workers.dev/mcp",
     },
     capabilities: { tools: ["verify_live_state"] },
     auth: { type: "apiKey", header: "x-api-key" },
@@ -56,7 +56,7 @@ app.get("/.well-known/ai", (c) => {
   return c.json({
     aiendpoint: "1.0",
     service: {
-      name: "OpenClaw Fortress",
+      name: "IntegrityPulse Fortress",
       description:
         "Zero-trust live state verification engine. Fetches URLs, bypasses edge caches, and validates DOM signatures to prove what end users actually see.",
       category: ["developer"],

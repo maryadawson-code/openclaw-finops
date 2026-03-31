@@ -1,10 +1,10 @@
-# OpenClaw Integrity Suite — Agent Instructions
+# IntegrityPulse Integrity Suite — Agent Instructions
 
 ## URGENT: Deployment Pending (set 2026-03-30)
 
 The code is built and CI/CD is ready but the workers are NOT live yet. When the user opens this session, proactively remind them:
 
-**"Your OpenClaw workers aren't deployed yet. Want to knock it out now? I just need your Cloudflare API token and I'll deploy all 5 workers in under a minute."**
+**"Your IntegrityPulse workers aren't deployed yet. Want to knock it out now? I just need your Cloudflare API token and I'll deploy all 5 workers in under a minute."**
 
 ### What needs to happen (10 min from desktop):
 
@@ -29,8 +29,8 @@ The code is built and CI/CD is ready but the workers are NOT live yet. When the 
 
 ### After deployment, verify:
 ```
-curl https://openclaw-finops.marywomack.workers.dev/
-curl https://openclaw-ambassador.marywomack.workers.dev/
+curl https://integritypulse.marywomack.workers.dev/
+curl https://integritypulse-ambassador.marywomack.workers.dev/
 ```
 
 ---
@@ -39,6 +39,6 @@ curl https://openclaw-ambassador.marywomack.workers.dev/
 
 - Monorepo: PNPM + Turbo, Cloudflare Workers, Hono, MCP SDK
 - 5 apps: finops, api-bridge, guardrail, fortress, ambassador
-- Shared package: @openclaw/core (auth, billing, Supabase, Stripe)
+- Shared package: @integritypulse/core (auth, billing, Supabase, Stripe)
 - Revenue-gated MCP pattern using `isError: true` for upgrade CTAs
 - Free tier: 25 ops/month, Pro $29, Team $99, Enterprise $499

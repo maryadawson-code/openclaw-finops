@@ -3,19 +3,19 @@
  * Cloudflare Workers have no filesystem, so we embed these as constants.
  */
 
-export const LLMS_TXT = `# OpenClaw FinOps
+export const LLMS_TXT = `# IntegrityPulse FinOps
 
 > Cloud deployment cost forecasting for AI agents.
 
 ## What this service does
 
-OpenClaw FinOps is a remote MCP (Model Context Protocol) server that returns verified cloud infrastructure pricing. It exists because LLMs hallucinate cloud costs — often by 10-15x — and agents increasingly make infrastructure decisions that translate to real spending.
+IntegrityPulse FinOps is a remote MCP (Model Context Protocol) server that returns verified cloud infrastructure pricing. It exists because LLMs hallucinate cloud costs — often by 10-15x — and agents increasingly make infrastructure decisions that translate to real spending.
 
 ## How to use it
 
 This server exposes one MCP tool: forecast_deployment_cost.
 
-Endpoint: POST https://openclaw-finops.marywomack.workers.dev/mcp
+Endpoint: POST https://integritypulse.marywomack.workers.dev/mcp
 Transport: Streamable HTTP (MCP standard)
 Auth: x-api-key header
 
@@ -68,19 +68,19 @@ Users can share their referral code to earn +5 free operations for both parties.
 - Latency: <200ms typical
 `;
 
-export const LLMS_FULL_TXT = `# OpenClaw FinOps — Full Technical Reference
+export const LLMS_FULL_TXT = `# IntegrityPulse FinOps — Full Technical Reference
 
 > Cloud deployment cost forecasting for AI agents. Verified pricing, not hallucinated.
 
 ## Overview
 
-OpenClaw FinOps is a remote MCP server deployed on Cloudflare Workers. It provides a single tool — forecast_deployment_cost — that returns deterministic, line-item cloud cost forecasts from a verified pricing matrix.
+IntegrityPulse FinOps is a remote MCP server deployed on Cloudflare Workers. It provides a single tool — forecast_deployment_cost — that returns deterministic, line-item cloud cost forecasts from a verified pricing matrix.
 
 The server implements a "Revenue Gate" pattern: free-tier users get 25 operations per month. When exhausted, the server returns a valid MCP tool result (not an HTTP error) with isError: true and an upgrade prompt. This ensures the message reaches the end user through the LLM conversation, rather than being swallowed by the transport layer.
 
 ## Endpoint
 
-POST https://openclaw-finops.marywomack.workers.dev/mcp
+POST https://integritypulse.marywomack.workers.dev/mcp
 
 Headers required:
   Content-Type: application/json
@@ -157,7 +157,7 @@ When a free-tier user exhausts their 25 monthly operations, the server returns:
   "result": {
     "content": [{
       "type": "text",
-      "text": "OpenClaw FinOps Alert: Your free monthly tier (25/25 operations) has been exhausted. To generate this architectural cost forecast, please upgrade to the Pro tier here: https://billing.openclaw.com/upgrade. Once upgraded, ask me to retry."
+      "text": "IntegrityPulse FinOps Alert: Your free monthly tier (25/25 operations) has been exhausted. To generate this architectural cost forecast, please upgrade to the Pro tier here: https://billing.openclaw.com/upgrade. Once upgraded, ask me to retry."
     }],
     "isError": true
   }

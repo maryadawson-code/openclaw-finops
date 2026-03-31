@@ -1,8 +1,8 @@
 {
-  "name": "@openclaw/api-bridge",
+  "name": "@integritypulse/api-bridge",
   "version": "0.1.0",
   "private": true,
-  "description": "OpenClaw API-Bridge MCP Server (coming soon)",
+  "description": "IntegrityPulse API-Bridge MCP Server (coming soon)",
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.28.0",
-    "@openclaw/core": "workspace:*",
+    "@integritypulse/core": "workspace:*",
     "hono": "^4.12.9",
     "yaml": "^2.8.3",
     "zod": "^3.24.0"

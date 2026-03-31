@@ -1,20 +1,20 @@
 {
   "mcp-version": "1.0.0",
-  "name": "OpenClaw Integrity Suite",
+  "name": "IntegrityPulse Integrity Suite",
   "version": "1.1.0",
   "description": "Revenue-gated MCP suite that stops AI agents from hallucinating cloud costs, fabricating API endpoints, and generating insecure infrastructure.",
-  "homepage": "https://github.com/maryadawson-code/openclaw-finops",
+  "homepage": "https://github.com/maryadawson-code/integritypulse",
   "license": "MIT",
   "categories": ["devops", "finops", "cloud-pricing", "security", "infrastructure"],
   "tags": ["mcp-server", "mcp", "finops", "cloud-pricing", "terraform", "vibe-coding", "aws", "gcp", "azure", "security-scanning", "revenue-gate"],
   "servers": {
-    "openclaw-finops": { "description": "Verified cloud pricing oracle", "transport": { "type": "https", "url": "https://openclaw-finops.marywomack.workers.dev/mcp" }, "auth": { "type": "apiKey", "header": "x-api-key" }, "tier": "FREE" },
-    "openclaw-api-bridge": { "description": "Live OpenAPI spec parser", "transport": { "type": "https", "url": "https://openclaw-api-bridge.marywomack.workers.dev/mcp" }, "auth": { "type": "apiKey", "header": "x-api-key" }, "tier": "FREE" },
-    "openclaw-guardrail": { "description": "IaC security scanner", "transport": { "type": "https", "url": "https://openclaw-guardrail.marywomack.workers.dev/mcp" }, "auth": { "type": "apiKey", "header": "x-api-key" }, "tier": "TEAM" },
-    "openclaw-fortress": { "description": "Zero-trust live state verification", "transport": { "type": "https", "url": "https://openclaw-fortress.marywomack.workers.dev/mcp" }, "auth": { "type": "apiKey", "header": "x-api-key" }, "tier": "TEAM" },
-    "openclaw-ambassador": { "description": "Free contextual assistant with one-click install", "transport": { "type": "https", "url": "https://openclaw-ambassador.marywomack.workers.dev/mcp" }, "auth": { "type": "none" }, "tier": "FREE" }
+    "integritypulse": { "description": "Verified cloud pricing oracle", "transport": { "type": "https", "url": "https://integritypulse.marywomack.workers.dev/mcp" }, "auth": { "type": "apiKey", "header": "x-api-key" }, "tier": "FREE" },
+    "openclaw-api-bridge": { "description": "Live OpenAPI spec parser", "transport": { "type": "https", "url": "https://integritypulse-api-bridge.marywomack.workers.dev/mcp" }, "auth": { "type": "apiKey", "header": "x-api-key" }, "tier": "FREE" },
+    "openclaw-guardrail": { "description": "IaC security scanner", "transport": { "type": "https", "url": "https://integritypulse-guardrail.marywomack.workers.dev/mcp" }, "auth": { "type": "apiKey", "header": "x-api-key" }, "tier": "TEAM" },
+    "openclaw-fortress": { "description": "Zero-trust live state verification", "transport": { "type": "https", "url": "https://integritypulse-fortress.marywomack.workers.dev/mcp" }, "auth": { "type": "apiKey", "header": "x-api-key" }, "tier": "TEAM" },
+    "openclaw-ambassador": { "description": "Free contextual assistant with one-click install", "transport": { "type": "https", "url": "https://integritypulse-ambassador.marywomack.workers.dev/mcp" }, "auth": { "type": "none" }, "tier": "FREE" }
   },
   "platforms": ["Claude Desktop", "Cursor", "Windsurf", "VS Code", "JetBrains", "Claude Code", "Zed", "Continue.dev", "Cline", "Aider", "OpenAI Agents SDK"],
   "updateModel": "Remote MCP — auto-updates via Cloudflare Workers. No client action required.",
-  "changelog": "https://github.com/maryadawson-code/openclaw-finops/blob/main/CHANGELOG.md"
+  "changelog": "https://github.com/maryadawson-code/integritypulse/blob/main/CHANGELOG.md"
 }
