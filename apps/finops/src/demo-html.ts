@@ -123,6 +123,13 @@ footer{text-align:center;padding:0 24px 32px;color:#555;font-size:.8rem}
   <div class="progress" id="progress"></div>
 </div>
 
+<div style="display:flex;justify-content:center;gap:10px;margin:24px 0;flex-wrap:wrap">
+  <a href="https://twitter.com/intent/tweet?text=AI%20agents%20hallucinate%20cloud%20costs%20by%205-15x.%20This%20open-source%20MCP%20tool%20fixes%20it.%20Free%20tier%2C%20MIT%20licensed.&url=https://openclaw-finops.marywomack.workers.dev/demo" target="_blank" rel="noopener" style="background:#1DA1F2;color:#fff;padding:10px 20px;border-radius:9999px;text-decoration:none;font-weight:600;font-size:13px">Share on X</a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://openclaw-finops.marywomack.workers.dev/demo" target="_blank" rel="noopener" style="background:#0A66C2;color:#fff;padding:10px 20px;border-radius:9999px;text-decoration:none;font-weight:600;font-size:13px">Share on LinkedIn</a>
+  <a href="https://www.reddit.com/submit?url=https://openclaw-finops.marywomack.workers.dev/demo&title=AI%20agents%20hallucinate%20cloud%20costs%20by%205-15x.%20This%20MCP%20tool%20fixes%20it." target="_blank" rel="noopener" style="background:#FF4500;color:#fff;padding:10px 20px;border-radius:9999px;text-decoration:none;font-weight:600;font-size:13px">Share on Reddit</a>
+  <a href="https://news.ycombinator.com/submitlink?u=https://openclaw-finops.marywomack.workers.dev/demo&t=OpenClaw%3A%20MCP%20tools%20that%20stop%20AI%20agents%20from%20hallucinating%20cloud%20costs" target="_blank" rel="noopener" style="background:#f97316;color:#000;padding:10px 20px;border-radius:9999px;text-decoration:none;font-weight:600;font-size:13px">Share on HN</a>
+</div>
+
 <div class="cta-section">
   <h2>Stop hallucinations. Start shipping.</h2>
   <p>Free tier: 25 ops/month. No credit card. Set up in 30 seconds.</p>
@@ -140,10 +147,29 @@ footer{text-align:center;padding:0 24px 32px;color:#555;font-size:.8rem}
   }
 }</pre>
   </div>
+
+  <div style="margin-top:32px;padding:24px;background:#111;border:1px solid #333;border-radius:12px;max-width:480px;margin-left:auto;margin-right:auto">
+    <h3 style="color:#fff;font-size:1rem;margin-bottom:4px">Get notified when we ship new tools</h3>
+    <p style="color:#888;font-size:.85rem;margin-bottom:16px">Join engineers building with verified AI infrastructure. No spam.</p>
+    <form action="https://buttondown.com/api/emails/embed-subscribe/openclaw" method="post" target="_blank" style="display:flex;gap:8px">
+      <input type="email" name="email" placeholder="you@company.com" required style="flex:1;padding:10px 14px;background:#1a1a1a;border:1px solid #444;border-radius:8px;color:#fff;font-size:14px">
+      <button type="submit" style="background:#f97316;color:#000;font-weight:700;padding:10px 20px;border:none;border-radius:8px;cursor:pointer;font-size:14px;white-space:nowrap">Subscribe</button>
+    </form>
+  </div>
+
+  <div style="margin-top:32px;max-width:520px;margin-left:auto;margin-right:auto">
+    <h3 style="color:#fff;font-size:1rem;margin-bottom:8px">Add "Powered by OpenClaw" to your project</h3>
+    <p style="color:#888;font-size:.85rem;margin-bottom:12px">Show your team uses verified pricing. Copy this badge:</p>
+    <div style="background:#111;border:1px solid #333;border-radius:8px;padding:12px;font-family:monospace;font-size:11px;color:#a6e3a1;position:relative">
+      <button onclick="navigator.clipboard.writeText(this.nextElementSibling.textContent);this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500)" style="position:absolute;top:8px;right:8px;background:#333;border:1px solid #555;color:#ccc;padding:3px 8px;border-radius:4px;font-size:10px;cursor:pointer">Copy</button>
+      <code>[![OpenClaw FinOps](https://img.shields.io/badge/Verified%20Pricing-OpenClaw%20FinOps-f97316)](https://openclaw-finops.marywomack.workers.dev)</code>
+    </div>
+  </div>
 </div>
 
 <footer>
   OpenClaw Integrity Suite &mdash; MIT Licensed &mdash; Built by <a href="https://missionmeetstech.com" style="color:#f97316">Mission Meets Tech</a>
+  <p style="margin-top:8px"><a href="https://github.com/maryadawson-code/openclaw-finops" style="color:#f97316">GitHub</a> &middot; <a href="https://smithery.ai/server/maryadawson-code/finops" style="color:#f97316">Smithery</a> &middot; <a href="/llms.txt" style="color:#666">llms.txt</a> &middot; <a href="/.well-known/mcp" style="color:#666">MCP Discovery</a></p>
 </footer>
 
 <script>

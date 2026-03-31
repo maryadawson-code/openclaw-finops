@@ -132,14 +132,30 @@ footer{text-align:center;color:#666;font-size:.85rem;margin-top:48px;padding-top
 </table>
 </div>
 
+<div style="display:flex;justify-content:center;gap:8px;margin:24px 0;flex-wrap:wrap">
+<a href="https://twitter.com/intent/tweet?text=AI%20agents%20hallucinate%20cloud%20costs%20by%205-15x.%20This%20open-source%20MCP%20tool%20fixes%20it.&url=https://openclaw-finops.marywomack.workers.dev" target="_blank" style="background:#1DA1F2;color:#fff;padding:9px 18px;border-radius:9999px;text-decoration:none;font-weight:600;font-size:12px">Share on X</a>
+<a href="https://www.linkedin.com/sharing/share-offsite/?url=https://openclaw-finops.marywomack.workers.dev" target="_blank" style="background:#0A66C2;color:#fff;padding:9px 18px;border-radius:9999px;text-decoration:none;font-weight:600;font-size:12px">Share on LinkedIn</a>
+<a href="https://www.reddit.com/submit?url=https://openclaw-finops.marywomack.workers.dev&title=Open-source%20MCP%20tool%20that%20stops%20AI%20agents%20from%20hallucinating%20cloud%20costs" target="_blank" style="background:#FF4500;color:#fff;padding:9px 18px;border-radius:9999px;text-decoration:none;font-weight:600;font-size:12px">Share on Reddit</a>
+</div>
+
 <div style="text-align:center;margin:32px 0">
 <a href="https://github.com/maryadawson-code/openclaw-finops" class="btn">GitHub</a>
+<a href="/demo" class="btn btn-outline">Watch Demo</a>
 <a href="https://smithery.ai/server/maryadawson-code/finops" class="btn btn-outline">Smithery</a>
+</div>
+
+<div class="section" style="text-align:center">
+<h2 style="border:none">Stay in the loop</h2>
+<p style="color:#888;font-size:.9rem;margin-bottom:16px">New tools, pricing updates, and the Revenue-Gated MCP pattern. No spam.</p>
+<form action="https://buttondown.com/api/emails/embed-subscribe/openclaw" method="post" target="_blank" style="display:flex;gap:8px;max-width:400px;margin:0 auto">
+<input type="email" name="email" placeholder="you@company.com" required style="flex:1;padding:10px 14px;background:#111;border:1px solid #333;border-radius:8px;color:#fff;font-size:14px">
+<button type="submit" style="background:#f97316;color:#000;font-weight:700;padding:10px 20px;border:none;border-radius:8px;cursor:pointer">Subscribe</button>
+</form>
 </div>
 
 <footer>
 <p>OpenClaw FinOps — MIT Licensed. Built by <a href="https://missionmeetstech.com">Mission Meets Tech</a>.</p>
-<p style="margin-top:8px"><a href="/.well-known/mcp">MCP Discovery</a> · <a href="/llms.txt">llms.txt</a> · <a href="/.well-known/agent.json">Agent Card</a></p>
+<p style="margin-top:8px"><a href="/.well-known/mcp">MCP Discovery</a> · <a href="/llms.txt">llms.txt</a> · <a href="/.well-known/agent.json">Agent Card</a> · <a href="/demo">Demo</a></p>
 </footer>
 </div>
 </body>
@@ -186,6 +202,9 @@ select{cursor:pointer}
 .back{color:#f97316;text-decoration:none;font-size:.9rem}
 .cta{margin-top:24px;padding:20px;background:#1a1a2e;border:1px solid #333;border-radius:12px;text-align:center;display:none}
 .cta a{color:#f97316;font-weight:700}
+.share-bar{display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap;display:none}
+.share-bar a{padding:8px 16px;border-radius:9999px;text-decoration:none;font-weight:600;font-size:12px;color:#fff}
+.share-bar .sx{background:#1DA1F2}.share-bar .sl{background:#0A66C2}.share-bar .sr{background:#FF4500}
 </style>
 </head>
 <body>
@@ -213,6 +232,12 @@ select{cursor:pointer}
 <button class="btn" id="run" onclick="runForecast()">Get Forecast</button>
 
 <div id="result"></div>
+<div class="share-bar" id="shareBar">
+<span style="color:#888;font-size:12px;align-self:center">Share your forecast:</span>
+<a class="sx" href="#" id="shareX" target="_blank">X</a>
+<a class="sl" href="#" id="shareLI" target="_blank">LinkedIn</a>
+<a class="sr" href="#" id="shareR" target="_blank">Reddit</a>
+</div>
 <div class="cta" id="cta">
 <p>Want unlimited forecasts inside your AI agent?</p>
 <p style="margin-top:8px"><a href="https://github.com/maryadawson-code/openclaw-finops">Get your free API key</a> — 25 ops/month, no credit card.</p>
@@ -232,6 +257,12 @@ const services=Array.from(rows).map(r=>({service_name:r.querySelector('.svc-name
 try{const res=await fetch('/try',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({provider,services_to_add:services})});
 const data=await res.json();document.getElementById('result').style.display='block';document.getElementById('result').textContent=data.forecast||data.error||JSON.stringify(data,null,2);
 document.getElementById('cta').style.display='block';
+var sb=document.getElementById('shareBar');sb.style.display='flex';
+var msg=encodeURIComponent('Just ran a cloud cost forecast with OpenClaw FinOps. LLMs guess $45/mo - real price: $286. Try it free:');
+var url=encodeURIComponent('https://openclaw-finops.marywomack.workers.dev/try');
+document.getElementById('shareX').href='https://twitter.com/intent/tweet?text='+msg+'&url='+url;
+document.getElementById('shareLI').href='https://www.linkedin.com/sharing/share-offsite/?url='+url;
+document.getElementById('shareR').href='https://www.reddit.com/submit?url='+encodeURIComponent('https://openclaw-finops.marywomack.workers.dev/try')+'&title='+msg;
 }catch(e){document.getElementById('result').style.display='block';document.getElementById('result').textContent='Error: '+e.message}
 btn.disabled=false;btn.textContent='Get Forecast'}
 </script>

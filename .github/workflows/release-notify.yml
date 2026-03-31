@@ -1,0 +1,43 @@
+name: Release Notification
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  notify-registries:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Ping IndexNow to re-crawl all pages on new release
+      - name: Ping IndexNow
+        run: |
+          curl -s -X POST "https://api.indexnow.org/IndexNow" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "host": "openclaw-finops.marywomack.workers.dev",
+              "key": "openclaw-finops",
+              "urlList": [
+                "https://openclaw-finops.marywomack.workers.dev/",
+                "https://openclaw-finops.marywomack.workers.dev/demo",
+                "https://openclaw-finops.marywomack.workers.dev/try",
+                "https://openclaw-finops.marywomack.workers.dev/.well-known/mcp",
+                "https://openclaw-finops.marywomack.workers.dev/.well-known/mcp/server-card.json"
+              ]
+            }'
+
+      # Create a GitHub Discussion for the release (community engagement)
+      - name: Create release discussion
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api graphql -f query='
+            mutation {
+              createDiscussion(input: {
+                repositoryId: "'$(gh api repos/${{ github.repository }} --jq '.node_id')'"
+                categoryId: "'$(gh api repos/${{ github.repository }}/discussions/categories --jq '.[0].node_id')'"
+                title: "Release ${{ github.event.release.tag_name }} is live"
+                body: "New release published: [${{ github.event.release.tag_name }}](${{ github.event.release.html_url }})\n\nWhat are you building with OpenClaw? Share your use case below."
+              }) { discussion { url } }
+            }' || echo "Discussion creation skipped (no categories configured)"
