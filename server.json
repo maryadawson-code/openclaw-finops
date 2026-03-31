@@ -1,0 +1,25 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.maryadawson-code/openclaw-finops",
+  "title": "OpenClaw FinOps",
+  "description": "Verified cloud cost forecasting for AI agents. AWS, GCP, Azure pricing matrix.",
+  "repository": {
+    "url": "https://github.com/maryadawson-code/openclaw-finops",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://openclaw-finops.marywomack.workers.dev/mcp",
+      "headers": [
+        {
+          "name": "x-api-key",
+          "description": "Your OpenClaw FinOps API key. Free tier: 25 ops/month at https://openclaw-finops.marywomack.workers.dev",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}

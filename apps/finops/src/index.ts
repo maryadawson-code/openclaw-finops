@@ -51,6 +51,47 @@ app.get("/.well-known/mcp", (c) => {
 });
 
 // ---------------------------------------------------------------------------
+// Discovery: /.well-known/mcp/server-card.json (Smithery)
+// ---------------------------------------------------------------------------
+app.get("/.well-known/mcp/server-card.json", (c) => {
+  return c.json({
+    name: "OpenClaw FinOps",
+    description: "Cloud deployment cost forecasting for AI agents. Returns verified, line-item pricing for AWS, GCP, and Azure directly inside agent conversations. Free tier includes 25 operations/month.",
+    version: "1.0.0",
+    tools: [
+      {
+        name: "forecast_deployment_cost",
+        description: "Estimate monthly cloud deployment cost with a line-item breakdown. Supports AWS, GCP, and Azure.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            provider: { type: "string", enum: ["AWS", "GCP", "AZURE"], description: "Cloud provider" },
+            services_to_add: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  service_name: { type: "string", description: "Service identifier (e.g., ec2.m5.large, rds.postgres.db.m5.large)" },
+                  estimated_usage_hours: { type: "number", description: "Monthly usage hours (730 = full month)" },
+                },
+                required: ["service_name"],
+              },
+              description: "List of services to price",
+            },
+          },
+          required: ["provider", "services_to_add"],
+        },
+      },
+    ],
+    authentication: {
+      type: "apiKey",
+      header: "x-api-key",
+      description: "API key required. Free tier: 25 ops/month.",
+    },
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Discovery: Google A2A Agent Card
 // ---------------------------------------------------------------------------
 app.get("/.well-known/agent.json", (c) => {
@@ -158,6 +199,32 @@ app.get("/.well-known/ai", (c) => {
     rate_limits: { requests_per_minute: 60, agent_tier_available: true },
     meta: { last_updated: "2026-03-28" },
   });
+});
+
+// ---------------------------------------------------------------------------
+// MCP endpoint — GET handler for SSE-based clients (Smithery, etc.)
+// ---------------------------------------------------------------------------
+app.get("/mcp", async (c) => {
+  const supabase = getSupabaseClient(c.env.SUPABASE_URL, c.env.SUPABASE_SERVICE_KEY);
+  const apiKey = extractApiKey(c.req.raw.headers);
+  const referralCode = extractReferralCode(c.req.raw.headers);
+  const authResult = await authenticateAndCheckLimits(supabase, apiKey, referralCode);
+
+  if (!authResult.ok) {
+    return c.json({
+      jsonrpc: "2.0",
+      id: null,
+      error: { code: -32001, message: authResult.message },
+    }, 401);
+  }
+
+  const server = createMcpServer();
+  const transport = new WebStandardStreamableHTTPServerTransport({
+    sessionIdGenerator: undefined,
+    enableJsonResponse: true,
+  });
+  await server.connect(transport);
+  return transport.handleRequest(c.req.raw);
 });
 
 // ---------------------------------------------------------------------------
