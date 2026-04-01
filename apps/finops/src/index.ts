@@ -194,7 +194,7 @@ footer{text-align:center;color:#666;font-size:.85rem;margin-top:48px;padding-top
 // ---------------------------------------------------------------------------
 // Health check (JSON)
 // ---------------------------------------------------------------------------
-app.get("/health", (c) => c.json({ status: "ok", service: "integritypulse", suite: "openclaw" }));
+app.get("/health", (c) => c.json({ status: "ok", service: "integritypulse", suite: "integritypulse" }));
 
 // ---------------------------------------------------------------------------
 // /demo — Animated product demo (shareable, auto-plays)
@@ -639,7 +639,7 @@ app.get("/.well-known/ai", (c) => {
     auth: {
       type: "apikey",
       header: "x-api-key",
-      docs: "https://billing.openclaw.com/docs",
+      docs: "https://integritypulse.marywomack.workers.dev",
     },
     rate_limits: { requests_per_minute: 60, agent_tier_available: true },
     meta: { last_updated: "2026-03-28" },
@@ -648,21 +648,10 @@ app.get("/.well-known/ai", (c) => {
 
 // ---------------------------------------------------------------------------
 // MCP endpoint — GET handler for SSE-based clients (Smithery, etc.)
+// Allow unauthenticated GET so registry health-checks and SSE discovery work.
+// Actual tool execution is gated in the POST handler.
 // ---------------------------------------------------------------------------
 app.get("/mcp", async (c) => {
-  const supabase = getSupabaseClient(c.env.SUPABASE_URL, c.env.SUPABASE_SERVICE_KEY);
-  const apiKey = extractApiKey(c.req.raw.headers);
-  const referralCode = extractReferralCode(c.req.raw.headers);
-  const authResult = await authenticateAndCheckLimits(supabase, apiKey, referralCode);
-
-  if (!authResult.ok) {
-    return c.json({
-      jsonrpc: "2.0",
-      id: null,
-      error: { code: -32001, message: authResult.message },
-    }, 401);
-  }
-
   const server = createMcpServer();
   const transport = new WebStandardStreamableHTTPServerTransport({
     sessionIdGenerator: undefined,
@@ -676,35 +665,51 @@ app.get("/mcp", async (c) => {
 // MCP endpoint — Revenue Gate middleware → Streamable HTTP transport
 // ---------------------------------------------------------------------------
 app.post("/mcp", async (c) => {
-  const supabase = getSupabaseClient(c.env.SUPABASE_URL, c.env.SUPABASE_SERVICE_KEY);
-  const apiKey = extractApiKey(c.req.raw.headers);
-  const referralCode = extractReferralCode(c.req.raw.headers);
-  const authResult = await authenticateAndCheckLimits(supabase, apiKey, referralCode);
+  // Allow unauthenticated discovery methods (initialize, tools/list, prompts/list, resources/list)
+  // so registry scanners (Smithery, etc.) can discover capabilities without an API key.
+  // Actual tool execution (tools/call) still requires auth.
+  let body: any;
+  try {
+    body = await c.req.json();
+  } catch {
+    return c.json({ jsonrpc: "2.0", id: null, error: { code: -32700, message: "Parse error" } }, 400);
+  }
 
-  if (!authResult.ok) {
-    let requestId: string | number | null = null;
-    try {
-      const body = await c.req.json();
-      requestId = body?.id ?? null;
-    } catch {}
+  const discoveryMethods = ["initialize", "tools/list", "prompts/list", "resources/list", "resources/templates/list"];
+  const isDiscovery = discoveryMethods.includes(body?.method);
 
-    if (authResult.reason === "rate_limited") {
+  if (!isDiscovery) {
+    const supabase = getSupabaseClient(c.env.SUPABASE_URL, c.env.SUPABASE_SERVICE_KEY);
+    const apiKey = extractApiKey(c.req.raw.headers);
+    const referralCode = extractReferralCode(c.req.raw.headers);
+    const authResult = await authenticateAndCheckLimits(supabase, apiKey, referralCode);
+
+    if (!authResult.ok) {
+      if (authResult.reason === "rate_limited") {
+        return c.json({
+          jsonrpc: "2.0",
+          id: body?.id ?? null,
+          result: {
+            content: [{ type: "text", text: authResult.message }],
+            isError: true,
+          },
+        }, 200);
+      }
+
       return c.json({
         jsonrpc: "2.0",
-        id: requestId,
-        result: {
-          content: [{ type: "text", text: authResult.message }],
-          isError: true,
-        },
-      }, 200);
+        id: body?.id ?? null,
+        error: { code: -32001, message: authResult.message },
+      }, 401);
     }
-
-    return c.json({
-      jsonrpc: "2.0",
-      id: requestId,
-      error: { code: -32001, message: authResult.message },
-    }, 401);
   }
+
+  // Reconstruct the request with the already-parsed body
+  const newReq = new Request(c.req.raw.url, {
+    method: "POST",
+    headers: c.req.raw.headers,
+    body: JSON.stringify(body),
+  });
 
   const server = createMcpServer();
   const transport = new WebStandardStreamableHTTPServerTransport({
@@ -712,7 +717,7 @@ app.post("/mcp", async (c) => {
     enableJsonResponse: true,
   });
   await server.connect(transport);
-  return transport.handleRequest(c.req.raw);
+  return transport.handleRequest(newReq);
 });
 
 // ---------------------------------------------------------------------------
